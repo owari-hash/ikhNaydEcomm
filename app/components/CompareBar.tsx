@@ -38,31 +38,7 @@ export default function CompareBar() {
     <div className="fixed left-0 right-0 bottom-14 md:bottom-0 z-50">
       <div className="max-w-7xl mx-auto px-3 pb-3">
         <div className="bg-white border border-gray-200 shadow-lg rounded-2xl overflow-hidden">
-          <div className="px-4 py-3 flex items-center justify-between gap-3">
-            <div className="text-sm font-semibold text-gray-800">
-              Сонгосон ({count} бүтээгдэхүүн)
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setItems([]);
-                  writeCompare([]);
-                }}
-                className="text-xs font-semibold text-gray-600 hover:text-gray-900"
-              >
-                Бүгдийг устгах
-              </button>
-              <Link
-                href="/compare"
-                className="bg-primary hover:bg-primary-dark text-white text-xs font-bold px-3 py-2 rounded-xl"
-              >
-                Харьцуулах
-              </Link>
-            </div>
-          </div>
-
-          <div className="px-4 pb-4">
+          <div className="px-4 py-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {slots.map((x) => (
                 <div

@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import CompareBar from "./components/CompareBar";
 import MobileBottomNav from "./components/MobileBottomNav";
 
 const inter = Inter({
@@ -26,7 +25,6 @@ export default function RootLayout({
         <Header />
         <main className="flex-1 pb-24 md:pb-0">{children}</main>
         <Footer />
-        <CompareBar />
         <MobileBottomNav />
       </body>
     </html>

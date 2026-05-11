@@ -50,11 +50,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           Нүүр
         </Link>
         <span>/</span>
-        <Link href="/s" className="hover:text-primary">
+        <Link href="/categories" className="hover:text-primary">
           Бүх бараа
         </Link>
         <span>/</span>
-        <Link href={`/s/${p.category}`} className="hover:text-primary">
+        <Link href={`/${p.category}`} className="hover:text-primary">
           {catLabel}
         </Link>
         <span>/</span>

@@ -24,7 +24,7 @@ export default function StoreLocationsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-1">
-        <Link href="/" className="hover:text-[#1565C0]">Нүүр</Link>
+        <Link href="/" className="hover:text-primary">Нүүр</Link>
         <span>/</span>
         <span className="text-gray-800 font-medium">Салбар дэлгүүр</span>
       </nav>
@@ -34,12 +34,12 @@ export default function StoreLocationsPage() {
         {stores.map(store => (
           <div key={store.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#1565C0] flex items-center justify-center flex-shrink-0 text-white text-xl">
+              <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 text-white text-xl">
                 🏪
               </div>
               <div>
                 <h2 className="font-bold text-gray-800 mb-1">{store.name}</h2>
-                <p className="text-xs text-blue-600 font-medium mb-3">{store.district}</p>
+                <p className="text-xs text-primary font-medium mb-3">{store.district}</p>
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex items-start gap-2">
                     <span className="text-base mt-0.5">📍</span>
@@ -47,7 +47,7 @@ export default function StoreLocationsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-base">📞</span>
-                    <a href={`tel:${store.phone.replace(/-/g, '')}`} className="text-[#1565C0] hover:underline font-medium">{store.phone}</a>
+                    <a href={`tel:${store.phone.replace(/-/g, '')}`} className="text-primary hover:underline font-medium">{store.phone}</a>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-base">🕐</span>
@@ -62,7 +62,7 @@ export default function StoreLocationsPage() {
 
       {/* Map placeholder */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 h-64 flex flex-col items-center justify-center gap-3">
+        <div className="bg-gradient-to-br from-red-50 to-red-100 h-64 flex flex-col items-center justify-center gap-3">
           <span className="text-6xl">🗺️</span>
           <p className="text-gray-500 font-medium">Улаанбаатар хот, Хан-Уул дүүрэг</p>
           <p className="text-sm text-gray-400">Их Наяд худалдааны төв</p>

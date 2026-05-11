@@ -27,24 +27,42 @@ function BannerBlock({
   title,
   subtitle,
   href,
+  fullWidth,
 }: {
   title: string;
   subtitle?: string;
   href?: string;
+  fullWidth?: boolean;
 }) {
   const content = (
-    <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all">
-      <div className="h-44 sm:h-52 bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white p-6 flex items-end justify-between">
-        <div>
-          <div className="text-xs font-black tracking-widest text-blue-200 uppercase">{title}</div>
-          {subtitle && <div className="mt-2 text-sm text-blue-100 font-semibold">{subtitle}</div>}
+    <>
+      {fullWidth ? (
+        <div className="w-full bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white h-56 sm:h-72 md:h-80">
+          <div className="h-full flex items-end justify-between px-4 sm:px-8 lg:px-16 py-8">
+            <div>
+              <div className="font-black tracking-widest uppercase text-sm text-red-300">{title}</div>
+              {subtitle && <div className="font-semibold mt-3 text-xl sm:text-2xl text-gray-200">{subtitle}</div>}
+            </div>
+            <div className="opacity-20 text-8xl">🧩</div>
+          </div>
         </div>
-        <div className="text-6xl opacity-20">🧩</div>
-      </div>
-    </div>
+      ) : (
+        <div className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+          <div className="h-44 sm:h-52 bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white p-6">
+            <div className="h-full flex items-end justify-between">
+              <div>
+                <div className="font-black tracking-widest uppercase text-xs text-blue-200">{title}</div>
+                {subtitle && <div className="font-semibold mt-2 text-sm text-blue-100">{subtitle}</div>}
+              </div>
+              <div className="opacity-20 text-6xl">🧩</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? <Link href={href} className={fullWidth ? 'block' : ''}>{content}</Link> : content;
 }
 
 function chunk<T>(arr: T[], size: number) {
@@ -130,7 +148,7 @@ export default function HomePage() {
       emoji: '💻',
     },
     {
-      href: '/s/computer',
+      href: '/computer',
       title: 'PC-banner.jpg',
       subtitle: 'Desktop / Parts',
       emoji: '🖥️',
@@ -146,9 +164,9 @@ export default function HomePage() {
   const smallSlides = [
     { href: '/', title: 'Iphone_17_-_b----23.jpg', subtitle: 'Featured', emoji: '📱' },
     { href: '/brands/apple', title: 'Apple_Products-1.jpg', subtitle: 'Apple', emoji: '🍎' },
-    { href: '/s/smartphone-and-tablet', title: 'Iphone_17_-_b-4.jpg', subtitle: 'iPhone / iPad', emoji: '📱' },
-    { href: '/s/laptop', title: 'Macbook_Air.jpg', subtitle: 'MacBook Air', emoji: '💻' },
-    { href: '/s/smartphone-and-tablet', title: 'Apple_Iphone_16.jpg', subtitle: 'Apple', emoji: '📱' },
+    { href: '/smartphone-and-tablet', title: 'Iphone_17_-_b-4.jpg', subtitle: 'iPhone / iPad', emoji: '📱' },
+    { href: '/laptop', title: 'Macbook_Air.jpg', subtitle: 'MacBook Air', emoji: '💻' },
+    { href: '/smartphone-and-tablet', title: 'Apple_Iphone_16.jpg', subtitle: 'Apple', emoji: '📱' },
   ];
 
   const sectionPlan: Array<
@@ -157,11 +175,11 @@ export default function HomePage() {
     | { kind: 'actions'; title: string }
     | { kind: 'banner1x2'; title: string }
   > = [
-    { kind: 'banner', title: 'Prebuild Banner - NEW Production', subtitle: '(placeholder banner)', href: '/s/computer' },
+    { kind: 'banner', title: 'Prebuild Banner - NEW Production', subtitle: '(placeholder banner)', href: '/computer' },
     { kind: 'products', title: 'NEW ALL PRODUCTS' },
-    { kind: 'banner', title: 'Hard Disk Banner - Part Production', subtitle: '(placeholder banner)', href: '/s/computer' },
+    { kind: 'banner', title: 'Hard Disk Banner - Part Production', subtitle: '(placeholder banner)', href: '/computer' },
     { kind: 'products', title: 'Part Product' },
-    { kind: 'banner', title: 'Accessories Banner', subtitle: '(placeholder banner)', href: '/s/accessories' },
+    { kind: 'banner', title: 'Accessories Banner', subtitle: '(placeholder banner)', href: '/accessories' },
     { kind: 'products', title: 'Accessories' },
     { kind: 'banner', title: 'Pocket Zeel', subtitle: '(payment promo placeholder)', href: '/leasing-all' },
     { kind: 'products', title: 'STANDART LAPTOPS' },
@@ -260,13 +278,15 @@ export default function HomePage() {
       </div>
 
       {/* Missing Turbotech sections (structure placeholders) */}
-      <div className="max-w-7xl mx-auto px-4 mt-10 space-y-10">
+      <div className="mt-10 space-y-10">
         {sectionPlan.map((s, i) => {
           if (s.kind === 'banner') {
             return (
               <div key={`${s.kind}_${s.title}_${i}`}>
-                <SectionTitle title={s.title} />
-                <BannerBlock title={s.title} subtitle={s.subtitle} href={s.href} />
+                <div className="max-w-7xl mx-auto px-4 mb-4">
+                  <SectionTitle title={s.title} />
+                </div>
+                <BannerBlock title={s.title} subtitle={s.subtitle} href={s.href} fullWidth />
               </div>
             );
           }

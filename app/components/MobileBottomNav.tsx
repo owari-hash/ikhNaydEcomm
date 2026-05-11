@@ -2,15 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getCartCount } from '../lib/cartStore';
 
 function Item({
   href,
   label,
   icon,
+  badge,
 }: {
   href: string;
   label: string;
   icon: React.ReactNode;
+  badge?: number;
 }) {
   const pathname = usePathname();
   const active = pathname === href;
@@ -22,13 +26,29 @@ function Item({
         active ? 'text-primary' : 'text-gray-500'
       }`}
     >
-      <span className="h-6 w-6">{icon}</span>
+      <span className="h-6 w-6 relative">
+        {icon}
+        {badge && badge > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+            {badge > 99 ? '99+' : badge}
+          </span>
+        )}
+      </span>
       <span className="text-[10px] font-medium">{label}</span>
     </Link>
   );
 }
 
 export default function MobileBottomNav() {
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    setCartCount(getCartCount());
+    const onCartChange = () => setCartCount(getCartCount());
+    window.addEventListener('cart:changed', onCartChange);
+    return () => window.removeEventListener('cart:changed', onCartChange);
+  }, []);
+
   return (
     <nav className="md:hidden fixed left-0 right-0 bottom-0 z-50 bg-white border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-2">
@@ -78,6 +98,7 @@ export default function MobileBottomNav() {
           <Item
             href="/checkout"
             label="Сагс"
+            badge={cartCount}
             icon={
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path

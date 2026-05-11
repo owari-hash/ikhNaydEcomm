@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { addToCart } from '../../lib/cartStore';
+import { addToCart } from '../lib/cartStore';
 
 type ProductVM = {
   id: string;
@@ -375,4 +375,3 @@ export default function CategoryListingClient({ category, products }: Props) {
     </div>
   );
 }
-

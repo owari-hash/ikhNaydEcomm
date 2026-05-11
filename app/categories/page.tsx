@@ -4,13 +4,13 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = { title: 'Ангилал | Turbotech' };
 
 const categories = [
-  { label: 'Зөөврийн компьютер', href: '/s/laptop' },
-  { label: 'Суурин компьютер', href: '/s/computer' },
-  { label: 'Ухаалаг төхөөрөмж', href: '/s/smartphone-and-tablet' },
-  { label: 'Консоль', href: '/s/console' },
-  { label: 'Аудио төхөөрөмж', href: '/s/audio-equipment' },
-  { label: 'Гэр ахуй', href: '/s/home' },
-  { label: 'Дагалдах хэрэгсэл', href: '/s/accessories' },
+  { label: 'Зөөврийн компьютер', href: '/laptop' },
+  { label: 'Суурин компьютер', href: '/computer' },
+  { label: 'Ухаалаг төхөөрөмж', href: '/smartphone-and-tablet' },
+  { label: 'Консоль', href: '/console' },
+  { label: 'Аудио төхөөрөмж', href: '/audio-equipment' },
+  { label: 'Гэр ахуй', href: '/home' },
+  { label: 'Дагалдах хэрэгсэл', href: '/accessories' },
   { label: 'Брэндүүд', href: '/brands' },
 ];
 

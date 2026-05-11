@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toggleCompare } from '../../lib/compareStore';
+import { addToCart } from '../../lib/cartStore';
 
 type Props = {
   product: {
@@ -20,16 +21,29 @@ type Props = {
 };
 
 const paymentOptions = [
-  { key: 'sono', label: 'Sono' },
-  { key: 'lend', label: 'Lendmn' },
+  { key: 'qpay', label: 'QPay' },
+  { key: 'socialpay', label: 'SocialPay' },
+  { key: 'monpay', label: 'MonPay' },
+  { key: 'lendmn', label: 'LendMN' },
   { key: 'pocket', label: 'Pocket' },
+  { key: 'cash', label: 'Бэлэн мөнгө' },
 ];
+
+function parsePrice(price: string): number {
+  return parseInt(price.replace(/[^0-9]/g, ''), 10) || 0;
+}
+
+function formatPrice(price: number): string {
+  return price.toLocaleString('mn-MN') + '₮';
+}
 
 export default function ProductDetailClient({ product }: Props) {
   const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
   const [imgIdx, setImgIdx] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
   const [zoom, setZoom] = useState({ scale: 1, rot: 0, flipX: false, flipY: false });
+  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
 
   const images = useMemo(() => {
     // Placeholder “gallery” like Turbotech (thumbs + main)
@@ -269,7 +283,25 @@ export default function ProductDetailClient({ product }: Props) {
                 )}
               </div>
             </div>
-            <button className="bg-primary hover:bg-primary-dark text-white font-bold px-5 py-3 rounded-xl text-sm">
+            <button
+              onClick={() => {
+                const price = parsePrice(product.price);
+                const oldPrice = product.oldPrice ? parsePrice(product.oldPrice) : undefined;
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  slug: product.slug,
+                  price,
+                  oldPrice,
+                  icon: product.icon,
+                  brand: product.brand,
+                });
+                setToastMsg(`${product.name} сагсанд нэмэгдлээ`);
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 2000);
+              }}
+              className="bg-primary hover:bg-primary-dark text-white font-bold px-5 py-3 rounded-xl text-sm transition-colors"
+            >
               Сагсанд нэмэх
             </button>
           </div>
@@ -355,6 +387,15 @@ export default function ProductDetailClient({ product }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
+          <div className="bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-fade-in-up">
+            {toastMsg}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

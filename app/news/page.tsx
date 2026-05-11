@@ -16,7 +16,7 @@ export default function NewsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-1">
-        <Link href="/" className="hover:text-[#1565C0]">Нүүр</Link>
+        <Link href="/" className="hover:text-primary">Нүүр</Link>
         <span>/</span>
         <span className="text-gray-800 font-medium">Мэдээ</span>
       </nav>
@@ -24,17 +24,17 @@ export default function NewsPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {news.map(item => (
           <div key={item.id} className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden group cursor-pointer">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 h-40 flex items-center justify-center text-6xl opacity-60 group-hover:opacity-80 transition-opacity">
+            <div className="bg-gradient-to-br from-red-50 to-red-100 h-40 flex items-center justify-center text-6xl opacity-60 group-hover:opacity-80 transition-opacity">
               📰
             </div>
             <div className="p-5">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">{item.category}</span>
+                <span className="text-xs bg-red-100 text-primary px-2 py-0.5 rounded-full font-medium">{item.category}</span>
                 <span className="text-xs text-gray-400">{item.date}</span>
               </div>
-              <h2 className="font-bold text-gray-800 mb-2 group-hover:text-[#1565C0] transition-colors">{item.title}</h2>
+              <h2 className="font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors">{item.title}</h2>
               <p className="text-sm text-gray-500 line-clamp-2">{item.excerpt}</p>
-              <button className="mt-4 text-sm text-[#1565C0] font-semibold hover:underline">Дэлгэрэнгүй →</button>
+              <button className="mt-4 text-sm text-primary font-semibold hover:underline">Дэлгэрэнгүй →</button>
             </div>
           </div>
         ))}
