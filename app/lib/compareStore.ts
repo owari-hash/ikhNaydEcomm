@@ -2,7 +2,7 @@
 
 export type CompareItem = { id: string; title: string; slug?: string };
 
-const STORAGE_KEY = 'turbotech.compare.items.v1';
+const STORAGE_KEY = 'Их Наяд Плаза.compare.items.v1';
 const MAX_ITEMS = 4;
 
 export function readCompare(): CompareItem[] {

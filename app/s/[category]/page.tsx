@@ -16,7 +16,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category } = await params;
   const label = CATEGORY_LABELS[category as CatalogCategoryKey] ?? 'Бараа';
-  return { title: `${label} | Turbotech` };
+  return { title: `${label} | Их Наяд Плаза` };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
       </div>
 
-      {/* Breadcrumbs like Turbotech */}
+      {/* Breadcrumbs like Их Наяд Плаза */}
       <nav aria-label="breadcrumbs" className="text-sm text-gray-500 mb-4 flex items-center gap-1">
         <Link href="/" className="hover:text-primary">
           Нүүр

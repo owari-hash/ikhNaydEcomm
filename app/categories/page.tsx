@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Ангилал | Turbotech' };
+export const metadata: Metadata = { title: 'Ангилал | Их Наяд Плаза' };
 
 const categories = [
   { label: 'Зөөврийн компьютер', href: '/laptop' },

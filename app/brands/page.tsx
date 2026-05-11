@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Брэндүүд | Turbotech' };
+export const metadata: Metadata = { title: 'Брэндүүд | Их Наяд Плаза' };
 
 const brands = [
   { name: 'Apple', slug: 'apple' },

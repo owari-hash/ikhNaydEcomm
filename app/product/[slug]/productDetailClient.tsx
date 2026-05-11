@@ -14,6 +14,7 @@ type Props = {
     category: string;
     categoryLabel: string;
     icon: string;
+    image?: string;
     price: string;
     oldPrice?: string;
     props: Array<{ k: string; v: string }>;
@@ -46,12 +47,17 @@ export default function ProductDetailClient({ product }: Props) {
   const [toastMsg, setToastMsg] = useState('');
 
   const images = useMemo(() => {
-    // Placeholder “gallery” like Turbotech (thumbs + main)
+    // Use real image if available, otherwise fallback to icon
+    const mainImage = product.image || product.icon;
+    const isRealImage = !!product.image;
     return new Array(6).fill(null).map((_, i) => ({
-      id: i,
-      label: `${product.name} ${i + 1}`,
+      id: `img-${i}`,
+      src: mainImage,
+      alt: `${product.name} - ${i + 1}`,
+      label: `View ${i + 1}`,
+      isImage: isRealImage,
     }));
-  }, [product.name]);
+  }, [product.image, product.icon, product.name]);
 
   useEffect(() => {
     if (!zoomOpen) return;
@@ -79,16 +85,28 @@ export default function ProductDetailClient({ product }: Props) {
               }`}
               aria-label={img.label}
             >
-              <div className="h-full w-full flex items-center justify-center text-2xl opacity-60">
-                {product.icon}
+              <div className="h-full w-full flex items-center justify-center">
+                {img.isImage ? (
+                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-2xl opacity-60">{product.icon}</div>
+                )}
               </div>
             </button>
           ))}
         </div>
 
         <div className="col-span-5 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden relative">
-          <div className="h-[360px] flex items-center justify-center text-8xl opacity-50 select-none">
-            {product.icon}
+          <div className="h-[360px] flex items-center justify-center">
+            {images[imgIdx]?.isImage ? (
+              <img 
+                src={images[imgIdx].src} 
+                alt={images[imgIdx].alt}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="text-8xl opacity-50 select-none">{product.icon}</div>
+            )}
           </div>
 
           <button
@@ -121,7 +139,7 @@ export default function ProductDetailClient({ product }: Props) {
         </div>
       </section>
 
-      {/* Zoom modal viewer (Turbotech-like controls) */}
+      {/* Zoom modal viewer (Их Наяд Плаза-like controls) */}
       {zoomOpen && (
         <div className="fixed inset-0 z-60">
           <button
@@ -143,16 +161,28 @@ export default function ProductDetailClient({ product }: Props) {
                 ✕
               </button>
 
-              <div className="h-full w-full bg-gray-50 flex items-center justify-center select-none">
-                <div
-                  className="text-[220px] opacity-50"
-                  style={{
-                    transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`,
-                    transition: 'transform 120ms ease-out',
-                  }}
-                >
-                  {product.icon}
-                </div>
+              <div className="h-full w-full bg-gray-50 flex items-center justify-center select-none overflow-hidden">
+                {images[imgIdx]?.isImage ? (
+                  <img 
+                    src={images[imgIdx].src}
+                    alt={images[imgIdx].alt}
+                    className="max-w-full max-h-full object-contain"
+                    style={{
+                      transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`,
+                      transition: 'transform 120ms ease-out',
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="text-[220px] opacity-50"
+                    style={{
+                      transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`,
+                      transition: 'transform 120ms ease-out',
+                    }}
+                  >
+                    {product.icon}
+                  </div>
+                )}
               </div>
 
               <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2">

@@ -57,7 +57,7 @@ export default function MobileBottomNav() {
             href="/"
             label="Нүүр"
             icon={
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" className="transition-all duration-200">
                 <path
                   strokeWidth="1.7"
                   strokeLinecap="round"

@@ -12,6 +12,7 @@ type ProductVM = {
   price: string;
   oldPrice?: string;
   badge: string | null;
+  image?: string;
 };
 
 type Props = {
@@ -266,8 +267,17 @@ export default function CategoryListingClient({ category, products }: Props) {
               href={`/product/${p.slug}`}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
             >
-              <div className="relative h-44 bg-gray-50 flex items-center justify-center">
-                <div className="text-6xl opacity-60">{category.icon}</div>
+              <div className="relative h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
+                {p.image ? (
+                  <img 
+                    src={p.image} 
+                    alt={p.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="text-6xl opacity-60">{category.icon}</div>
+                )}
                 {p.badge && (
                   <div className={`absolute top-2 left-2 text-xs font-black px-2 py-1 rounded-lg text-white ${p.badge === 'Шинэ' ? 'bg-primary' : 'bg-red-500'}`}>
                     {p.badge}

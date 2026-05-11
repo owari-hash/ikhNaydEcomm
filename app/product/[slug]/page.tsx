@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const p = getProductBySlug(slug);
-  return { title: p ? `${p.name}` : 'Бүтээгдэхүүн | Turbotech' };
+  return { title: p ? `${p.name}` : 'Бүтээгдэхүүн | Их Наяд Плаза' };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -71,6 +71,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             category: p.category,
             categoryLabel: catLabel,
             icon,
+            image: p.image,
             price: formatPrice(p.price),
             oldPrice: p.oldPrice ? formatPrice(p.oldPrice) : undefined,
             props: p.props,
@@ -91,8 +92,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   href={`/product/${x.slug}`}
                   className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
                 >
-                  <div className="h-28 bg-gray-50 flex items-center justify-center text-4xl opacity-60">
-                    {CATEGORY_ICONS[x.category]}
+                  <div className="h-28 bg-gray-50 flex items-center justify-center overflow-hidden">
+                    {x.image ? (
+                      <img 
+                        src={x.image} 
+                        alt={x.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="text-4xl opacity-60">{CATEGORY_ICONS[x.category]}</div>
+                    )}
                   </div>
                   <div className="p-3">
                     <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mb-1">

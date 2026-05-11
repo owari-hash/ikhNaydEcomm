@@ -12,8 +12,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Их Наяд | Электрон барааны дэлгүүр",
-  description: "ЭЛЕКТРОН БАРААНЫ ДЭЛГҮҮР",
+  title: "Их Наяд Плаза",
+  description: "Бүх төрлийн бараа, хэрэгсэл",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

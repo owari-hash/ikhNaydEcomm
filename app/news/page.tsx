@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Мэдээ | Turbotech' };
+export const metadata: Metadata = { title: 'Мэдээ | Их Наяд Плаза' };
 
 const news = [
-  { id: 1, title: 'iPhone 15 Pro Max Монголд ирлээ', date: '2026-04-15', excerpt: 'Apple-ийн хамгийн шинэ iPhone 15 Pro Max Turbotech дэлгүүрт ирлээ. Titanium бие, A17 Pro chip...', category: 'Шинэ бараа' },
+  { id: 1, title: 'iPhone 15 Pro Max Монголд ирлээ', date: '2026-04-15', excerpt: 'Apple-ийн хамгийн шинэ iPhone 15 Pro Max Их Наяд Плаза дэлгүүрт ирлээ. Titanium бие, A17 Pro chip...', category: 'Шинэ бараа' },
   { id: 2, title: 'Samsung Galaxy S24 Ultra онцлог', date: '2026-04-10', excerpt: 'Galaxy S24 Ultra нь AI-р дэмжигдсэн камертай. Зурган дотор 200MP сенсор...', category: 'Шинэ бараа' },
   { id: 3, title: 'ASUS ROG тоглоомын зориулалтын лаптоп шинэчлэгдлээ', date: '2026-04-05', excerpt: 'ASUS ROG Strix G16 нь Intel Core i9-14900HX, NVIDIA RTX 4080...', category: 'Мэдээ' },
-  { id: 4, title: 'Лизинг үйлчилгээ 0% хүүтэй болж өргөжлөө', date: '2026-03-28', excerpt: 'Turbotech 5 банктай хамтран 0% хүүтэй лизинг үйлчилгээг санал болгож байна...', category: 'Мэдэгдэл' },
+  { id: 4, title: 'Лизинг үйлчилгээ 0% хүүтэй болж өргөжлөө', date: '2026-03-28', excerpt: 'Их Наяд Плаза 5 банктай хамтран 0% хүүтэй лизинг үйлчилгээг санал болгож байна...', category: 'Мэдэгдэл' },
   { id: 5, title: 'FANTECH gaming gear шинэ загварууд', date: '2026-03-20', excerpt: 'FANTECH брэндийн хамгийн шинэ gaming mouse, keyboard, headset ирлээ...', category: 'Шинэ бараа' },
-  { id: 6, title: 'Turbotech Их Наяд салбар нээлтээ хийлээ', date: '2026-03-10', excerpt: 'Их Наяд худалдааны төвийн 3 давхарт Turbotech шинэ салбар дэлгүүр нээлтээ хийлээ...', category: 'Мэдэгдэл' },
+  { id: 6, title: 'Их Наяд Плаза Их Наяд салбар нээлтээ хийлээ', date: '2026-03-10', excerpt: 'Их Наяд худалдааны төвийн 3 давхарт Их Наяд Плаза шинэ салбар дэлгүүр нээлтээ хийлээ...', category: 'Мэдэгдэл' },
 ];
 
 export default function NewsPage() {

@@ -17,6 +17,7 @@ export type CatalogProduct = {
   oldPrice?: number;
   isNew?: boolean;
   isSale?: boolean;
+  image?: string;
   props: Array<{ k: string; v: string }>;
 };
 
@@ -53,6 +54,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     category: 'laptop',
     price: 4990000,
     isNew: true,
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop',
     props: [
       { k: 'Төлөв', v: 'Шинэ' },
       { k: 'Санах ойшил', v: '16GB' },
@@ -71,6 +73,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     price: 3490000,
     oldPrice: 3790000,
     isSale: true,
+    image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=400&h=300&fit=crop',
     props: [
       { k: 'Төлөв', v: 'Шинэ' },
       { k: 'Санах ойшил', v: '16GB' },
@@ -85,6 +88,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     brand: 'ASUS',
     category: 'computer',
     price: 2890000,
+    image: 'https://images.unsplash.com/photo-1624705002806-5d72df19c3ad?w=400&h=300&fit=crop',
     props: [
       { k: 'Төлөв', v: 'Шинэ' },
       { k: 'Ангилал', v: 'Graphic card' },
@@ -98,6 +102,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     brand: 'SONY',
     category: 'audio-equipment',
     price: 890000,
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop',
     oldPrice: 990000,
     isSale: true,
     props: [
@@ -113,6 +118,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     category: 'console',
     price: 1990000,
     isNew: true,
+    image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop',
     props: [
       { k: 'Төлөв', v: 'Шинэ' },
       { k: 'Төрөл', v: 'Console' },
@@ -127,6 +133,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
     price: 45000,
     oldPrice: 55000,
     isSale: true,
+    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=300&fit=crop',
     props: [
       { k: 'Төлөв', v: 'Шинэ' },
       { k: 'Төрөл', v: 'Mouse' },

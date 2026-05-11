@@ -9,8 +9,8 @@ export type User = {
   registeredAt: string;
 };
 
-const STORAGE_KEY = 'turbotech.auth.v1';
-const USERS_KEY = 'turbotech.users.v1';
+const STORAGE_KEY = 'Их Наяд Плаза.auth.v1';
+const USERS_KEY = 'Их Наяд Плаза.users.v1';
 
 export function getUsers(): Array<{ phone: string; email: string; password: string; firstName: string; lastName: string }> {
   try {

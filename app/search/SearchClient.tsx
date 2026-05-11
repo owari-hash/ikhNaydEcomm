@@ -75,9 +75,20 @@ export default function SearchClient() {
               href={`/product/${product.slug}`}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden group"
             >
-              {/* Image placeholder */}
-              <div className="h-32 bg-gray-50 flex items-center justify-center text-4xl relative">
-                {CATEGORY_ICONS[product.category]}
+              {/* Product Image */}
+              <div className="h-32 bg-gray-50 relative overflow-hidden">
+                {product.image ? (
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl">
+                    {CATEGORY_ICONS[product.category]}
+                  </div>
+                )}
                 {product.isSale && (
                   <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                     Хямдрал

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Холбоо барих | Turbotech' };
+export const metadata: Metadata = { title: 'Холбоо барих | Их Наяд Плаза' };
 
 export default function ContactPage() {
   return (
@@ -17,7 +17,7 @@ export default function ContactPage() {
         <div className="space-y-6">
           {[
             { icon: '📞', title: 'Утас', lines: ['7777-7734', '7777-7754'] },
-            { icon: '✉️', title: 'И-мэйл', lines: ['info@turbotech.mn'] },
+            { icon: '✉️', title: 'И-мэйл', lines: ['info@Их Наяд Плаза.mn'] },
             { icon: '🕐', title: 'Цагийн хуваарь', lines: ['Өдөр бүр 10:00 - 20:00'] },
             { icon: '📍', title: 'Хаяг', lines: ['Улаанбаатар хот, Хан-Уул дүүрэг,', '15-р хороо, Их Наяд худалдааны төв,', 'Зүүн өндөр 3 давхарт 309 тоот'] },
           ].map(c => (

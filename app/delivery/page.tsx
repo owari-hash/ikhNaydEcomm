@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Хүргэлтийн нөхцөл | Turbotech' };
+export const metadata: Metadata = { title: 'Хүргэлтийн нөхцөл | Их Наяд Плаза' };
 
 export default function DeliveryPage() {
   return (

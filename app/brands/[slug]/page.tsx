@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  return { title: `${slug.toUpperCase()} | Брэнд | Turbotech` };
+  return { title: `${slug.toUpperCase()} | Брэнд | Их Наяд Плаза` };
 }
 
 export default async function BrandPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -27,7 +27,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
         </div>
         <div>
           <h1 className="text-2xl font-black text-gray-800 mb-1">{brandName}</h1>
-          <p className="text-gray-500 text-sm">Turbotech дэлгүүрт боломжтой {brandName} брэндийн бүтээгдэхүүнүүд</p>
+          <p className="text-gray-500 text-sm">Их Наяд Плаза дэлгүүрт боломжтой {brandName} брэндийн бүтээгдэхүүнүүд</p>
         </div>
       </div>
 

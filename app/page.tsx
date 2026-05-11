@@ -23,7 +23,7 @@ function SectionTitle({
   );
 }
 
-function BannerBlock({
+function VideoBanner({
   title,
   subtitle,
   href,
@@ -34,35 +34,35 @@ function BannerBlock({
   href?: string;
   fullWidth?: boolean;
 }) {
-  const content = (
-    <>
-      {fullWidth ? (
-        <div className="w-full bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white h-56 sm:h-72 md:h-80">
-          <div className="h-full flex items-end justify-between px-4 sm:px-8 lg:px-16 py-8">
-            <div>
-              <div className="font-black tracking-widest uppercase text-sm text-red-300">{title}</div>
-              {subtitle && <div className="font-semibold mt-3 text-xl sm:text-2xl text-gray-200">{subtitle}</div>}
-            </div>
-            <div className="opacity-20 text-8xl">🧩</div>
-          </div>
+  const videoContent = (
+    <div className={`relative overflow-hidden ${fullWidth ? 'w-full h-56 sm:h-72 md:h-80' : 'h-44 sm:h-52 rounded-2xl border border-gray-100 shadow-sm'}`}>
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        poster="/video/stock.mp4"
+      >
+        <source src="/video/stock.mp4" type="video/mp4" />
+      </video>
+      
+      {/* Dark Overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
+      
+      {/* Content */}
+      <div className={`relative h-full flex items-end justify-between ${fullWidth ? 'px-4 sm:px-8 lg:px-16 py-8' : 'p-6'}`}>
+        <div>
+          <div className={`font-black tracking-widest uppercase ${fullWidth ? 'text-sm text-red-300' : 'text-xs text-red-300'}`}>{title}</div>
+          {subtitle && <div className={`font-semibold text-white ${fullWidth ? 'mt-3 text-xl sm:text-2xl' : 'mt-2 text-sm'}`}>{subtitle}</div>}
         </div>
-      ) : (
-        <div className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
-          <div className="h-44 sm:h-52 bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white p-6">
-            <div className="h-full flex items-end justify-between">
-              <div>
-                <div className="font-black tracking-widest uppercase text-xs text-blue-200">{title}</div>
-                {subtitle && <div className="font-semibold mt-2 text-sm text-blue-100">{subtitle}</div>}
-              </div>
-              <div className="opacity-20 text-6xl">🧩</div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+        <div className={`opacity-20 ${fullWidth ? 'text-8xl' : 'text-6xl'}`}>🧩</div>
+      </div>
+    </div>
   );
 
-  return href ? <Link href={href} className={fullWidth ? 'block' : ''}>{content}</Link> : content;
+  return href ? <Link href={href} className={fullWidth ? 'block' : ''}>{videoContent}</Link> : videoContent;
 }
 
 function chunk<T>(arr: T[], size: number) {
@@ -86,8 +86,17 @@ function ProductCarousel({ title }: { title: string }) {
                 href={`/product/${p.slug}`}
                 className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
               >
-                <div className="h-28 bg-gray-50 flex items-center justify-center text-4xl opacity-60">
-                  {CATEGORY_ICONS[p.category]}
+                <div className="h-28 bg-gray-50 flex items-center justify-center overflow-hidden">
+                  {p.image ? (
+                    <img 
+                      src={p.image} 
+                      alt={p.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="text-4xl opacity-60">{CATEGORY_ICONS[p.category]}</div>
+                  )}
                 </div>
                 <div className="p-3">
                   <div className="text-[10px] text-gray-400 font-black uppercase tracking-wide mb-1">{p.brand}</div>
@@ -125,13 +134,26 @@ function Tile({
   return (
     <Link
       href={href}
-      className="rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all"
+      className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all relative block h-full"
     >
-      <div className="h-full bg-gray-50 p-4 flex items-end justify-between gap-4">
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/video/stock.mp4" type="video/mp4" />
+      </video>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+      {/* Content */}
+      <div className="relative h-full p-4 flex items-end justify-between gap-4 text-white">
         <div>
-          <div className="text-xs font-black text-gray-500 uppercase tracking-widest">Gaming</div>
-          <div className="text-lg font-black text-gray-900 leading-tight mt-1">{label}</div>
-          {sub && <div className="text-sm text-gray-500 font-semibold mt-1">{sub}</div>}
+          <div className="text-xs font-black text-red-300 uppercase tracking-widest">Gaming</div>
+          <div className="text-lg font-black leading-tight mt-1">{label}</div>
+          {sub && <div className="text-sm text-gray-300 font-semibold mt-1">{sub}</div>}
         </div>
         <div className="text-5xl opacity-35">🎯</div>
       </div>
@@ -208,11 +230,24 @@ export default function HomePage() {
                 <Link
                   key={s.title}
                   href={s.href}
-                  className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all"
+                  className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all relative"
                 >
-                  <div className="h-72 bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 text-white p-8 flex items-end justify-between">
+                  {/* Video Background */}
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  >
+                    <source src="/video/stock.mp4" type="video/mp4" />
+                  </video>
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+                  {/* Content */}
+                  <div className="relative h-72 text-white p-8 flex items-end justify-between">
                     <div>
-                      <div className="text-xs font-black tracking-widest text-blue-200 uppercase">{s.title}</div>
+                      <div className="text-xs font-black tracking-widest text-red-300 uppercase">{s.title}</div>
                       <div className="mt-2 text-3xl font-black leading-tight">{s.subtitle}</div>
                     </div>
                     <div className="text-7xl opacity-25">{s.emoji}</div>
@@ -229,14 +264,27 @@ export default function HomePage() {
               <Link
                 key={s.title}
                 href={s.href}
-                className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all bg-white"
+                className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all relative"
               >
-                <div className="h-72 bg-linear-to-b from-white to-gray-50 p-6 flex flex-col justify-between">
+                {/* Video Background */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                >
+                  <source src="/video/stock.mp4" type="video/mp4" />
+                </video>
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
+                {/* Content */}
+                <div className="relative h-72 text-white p-6 flex flex-col justify-between">
                   <div>
-                    <div className="text-xs font-black tracking-widest text-gray-400 uppercase">{s.title}</div>
-                    <div className="mt-2 text-xl font-black text-gray-900">{s.subtitle}</div>
+                    <div className="text-xs font-black tracking-widest text-red-300 uppercase">{s.title}</div>
+                    <div className="mt-2 text-xl font-black">{s.subtitle}</div>
                   </div>
-                  <div className="text-7xl opacity-20 self-end">{s.emoji}</div>
+                  <div className="text-7xl opacity-25 self-end">{s.emoji}</div>
                 </div>
               </Link>
             ))}
@@ -264,7 +312,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Section blocks like Turbotech (repeatable) */}
+      {/* Section blocks like Их Наяд Плаза (repeatable) */}
       <div className="max-w-7xl mx-auto px-4 mt-10">
         <SectionTitle
           title="NEW ALL PRODUCTS"
@@ -277,7 +325,7 @@ export default function HomePage() {
         <ProductCarousel title="NEW ALL PRODUCTS" />
       </div>
 
-      {/* Missing Turbotech sections (structure placeholders) */}
+      {/* Missing Их Наяд Плаза sections (structure placeholders) */}
       <div className="mt-10 space-y-10">
         {sectionPlan.map((s, i) => {
           if (s.kind === 'banner') {
@@ -286,13 +334,13 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto px-4 mb-4">
                   <SectionTitle title={s.title} />
                 </div>
-                <BannerBlock title={s.title} subtitle={s.subtitle} href={s.href} fullWidth />
+                <VideoBanner title={s.title} subtitle={s.subtitle} href={s.href} fullWidth />
               </div>
             );
           }
           if (s.kind === 'products') {
             return (
-              <div key={`${s.kind}_${s.title}_${i}`}>
+              <div key={`${s.kind}_${s.title}_${i}`} className="max-w-7xl mx-auto px-4">
                 <SectionTitle title={s.title} />
                 <ProductCarousel title={s.title} />
               </div>
@@ -300,7 +348,7 @@ export default function HomePage() {
           }
           if (s.kind === 'actions') {
             return (
-              <div key={`${s.kind}_${s.title}_${i}`}>
+              <div key={`${s.kind}_${s.title}_${i}`} className="max-w-7xl mx-auto px-4">
                 <SectionTitle title={s.title} />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Link
@@ -332,12 +380,12 @@ export default function HomePage() {
             );
           }
           return (
-            <div key={`${s.kind}_${s.title}_${i}`}>
+            <div key={`${s.kind}_${s.title}_${i}`} className="max-w-7xl mx-auto px-4">
               <SectionTitle title={s.title} />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <BannerBlock title={s.title} subtitle="(left big placeholder)" href="/" />
-                <BannerBlock title={s.title} subtitle="(right placeholder)" href="/" />
-                <BannerBlock title={s.title} subtitle="(right placeholder)" href="/" />
+                <VideoBanner title={s.title} subtitle="(left big placeholder)" href="/" />
+                <VideoBanner title={s.title} subtitle="(right placeholder)" href="/" />
+                <VideoBanner title={s.title} subtitle="(right placeholder)" href="/" />
               </div>
             </div>
           );

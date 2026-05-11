@@ -11,7 +11,7 @@ export type CartItem = {
   quantity: number;
 };
 
-const STORAGE_KEY = 'turbotech.cart.items.v1';
+const STORAGE_KEY = 'Их Наяд Плаза.cart.items.v1';
 
 export function readCart(): CartItem[] {
   try {

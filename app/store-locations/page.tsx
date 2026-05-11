@@ -1,18 +1,18 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Салбар дэлгүүр | Turbotech' };
+export const metadata: Metadata = { title: 'Салбар дэлгүүр | Их Наяд Плаза' };
 
 const stores = [
   {
-    name: 'Turbotech — Их Наяд',
+    name: 'Их Наяд Плаза — Их Наяд',
     address: 'Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Их Наяд худалдааны төв, Зүүн өндөр 3 давхарт 309 тоот',
     phone: '7777-7734',
     hours: 'Өдөр бүр 10:00 - 20:00',
     district: 'Хан-Уул дүүрэг',
   },
   {
-    name: 'Turbotech — Зүүн өндөр',
+    name: 'Их Наяд Плаза — Зүүн өндөр',
     address: 'Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Зүүн өндөр худалдааны төв',
     phone: '7777-7754',
     hours: 'Өдөр бүр 10:00 - 20:00',

@@ -27,28 +27,42 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const products = CATEGORY_LABELS[key] ? getProductsByCategory(key) : [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="py-8">
       <h1 className="sr-only">Бүтээгдэхүүний хайлтын үр дүн</h1>
 
-      {/* Top banner carousel placeholder */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
-        <div className="h-44 sm:h-56 bg-linear-to-r from-gray-900 via-slate-800 to-gray-900 flex items-center justify-center text-white">
+      {/* Top banner with video background - full width */}
+      <div className="relative w-full h-56 sm:h-72 md:h-80 mb-6 overflow-hidden">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/video/stock.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+        {/* Content */}
+        <div className="relative h-full flex items-center justify-center text-white">
           <div className="text-center px-4">
-            <div className="text-xs font-bold tracking-widest text-blue-200 mb-2 uppercase">Banner</div>
-            <div className="text-2xl sm:text-3xl font-black">{label}</div>
-            <div className="text-sm text-blue-100 mt-1">Түр хүлээнэ үү...</div>
+            <div className="text-sm font-black tracking-widest text-red-300 mb-3 uppercase">Banner</div>
+            <div className="text-3xl sm:text-4xl font-black">{label}</div>
+            <div className="text-base text-gray-300 mt-2">Түр хүлээнэ үү...</div>
           </div>
         </div>
       </div>
 
-      {/* Breadcrumbs like Turbotech */}
-      <nav aria-label="breadcrumbs" className="text-sm text-gray-500 mb-4 flex items-center gap-1">
-        <Link href="/" className="hover:text-primary">
-          Нүүр
-        </Link>
-        <span>/</span>
-        <button className="hover:text-primary font-medium text-gray-700">Бүх бараа</button>
-      </nav>
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Breadcrumbs like Их Наяд Плаза */}
+        <nav aria-label="breadcrumbs" className="text-sm text-gray-500 mb-4 flex items-center gap-1">
+          <Link href="/" className="hover:text-primary">
+            Нүүр
+          </Link>
+          <span>/</span>
+          <button className="hover:text-primary font-medium text-gray-700">Бүх бараа</button>
+        </nav>
 
       {products.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
@@ -70,9 +84,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             price: formatPrice(p.price),
             oldPrice: p.oldPrice ? formatPrice(p.oldPrice) : undefined,
             badge: p.isNew ? 'Шинэ' : p.isSale ? 'Хямдрал' : null,
+            image: p.image,
           }))}
         />
       )}
+      </div>
     </div>
   );
 }

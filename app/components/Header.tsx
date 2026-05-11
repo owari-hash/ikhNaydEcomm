@@ -6,6 +6,7 @@ import { getCartCount } from '../lib/cartStore';
 import { readAuth, logout, type User } from '../lib/authStore';
 import { MOCK_PRODUCTS, CATEGORY_ICONS, CATEGORY_LABELS, formatPrice, type CatalogCategoryKey } from '../lib/mockCatalog';
 import { addToCart } from '../lib/cartStore';
+import MegaMenu from './MegaMenu';
 
 const categories = [
   { label: 'Зөөврийн компьютер', href: '/laptop' },
@@ -150,13 +151,15 @@ export default function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white border-b border-gray-100 py-3">
-        <div className="max-w-7xl mx-auto px-4 flex items-center gap-4">
+      <div className="bg-white border-b border-gray-100 py-2 md:py-3">
+        <div className="max-w-7xl mx-auto px-3 md:px-4 flex items-center gap-2 md:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex flex-col leading-tight">
-            <span className="text-2xl font-black text-primary tracking-tight">
-              ИХ <span className="text-orange-500">НАЯД</span>
-            </span>
+          <Link href="/" className="flex-shrink-0">
+            <img 
+              src="/logo.png" 
+              alt="Их Наяд" 
+              className="h-8 md:h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Search */}
@@ -167,12 +170,12 @@ export default function Header() {
                 value={search}
                 onChange={handleSearchChange}
                 onFocus={() => setShowSuggestions(true)}
-                placeholder="Бараа, брэнд хайх..."
-                className="flex-1 border border-gray-300 rounded-l-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                placeholder="Бараа хайх..."
+                className="flex-1 border border-gray-300 rounded-l-lg px-3 md:px-4 py-2 md:py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
               <button 
                 type="submit"
-                className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-r-lg transition-colors"
+                className="bg-primary hover:bg-primary-dark text-white px-3 md:px-5 py-2 md:py-2.5 rounded-r-lg transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </button>
@@ -248,9 +251,17 @@ export default function Header() {
                               onClick={() => handleSuggestionClick(product.slug)}
                               className="border border-gray-100 rounded-lg p-2 hover:shadow-sm transition-all cursor-pointer group"
                             >
-                              {/* Product Image Placeholder */}
-                              <div className="aspect-square bg-gray-50 rounded-md flex items-center justify-center text-2xl mb-2 relative overflow-hidden">
-                                {CATEGORY_ICONS[product.category]}
+                              {/* Product Image */}
+                              <div className="aspect-square bg-gray-50 rounded-md flex items-center justify-center mb-2 relative overflow-hidden">
+                                {product.image ? (
+                                  <img 
+                                    src={product.image} 
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="text-2xl">{CATEGORY_ICONS[product.category]}</div>
+                                )}
                                 {product.isSale && (
                                   <span className="absolute top-0.5 left-0.5 bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded">
                                     Хямдрал
@@ -324,36 +335,36 @@ export default function Header() {
           </div>
 
           {/* Nav Icons */}
-          <div className="flex items-center gap-5 ml-auto">
-            <Link href="/compare" className="flex flex-col items-center text-gray-500 hover:text-primary transition-colors group">
+          <div className="flex items-center gap-3 md:gap-5 ml-auto">
+            <Link href="/compare" className="hidden md:flex flex-col items-center text-gray-500 hover:text-primary transition-colors group">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
               <span className="text-[10px] mt-0.5">Харьцуулах</span>
             </Link>
             <Link href="/account/wishlists" className="flex flex-col items-center text-gray-500 hover:text-primary transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-              <span className="text-[10px] mt-0.5">Хадгалсан</span>
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+              <span className="hidden md:block text-[10px] mt-0.5">Хадгалсан</span>
             </Link>
             <Link href="/checkout" className="flex flex-col items-center text-gray-500 hover:text-primary transition-colors relative">
               <div className="relative">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] md:min-w-[18px] h-[16px] md:h-[18px] bg-primary text-white text-[9px] md:text-[10px] font-bold rounded-full flex items-center justify-center px-1">
                     {cartCount > 99 ? '99+' : cartCount}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-0.5">Сагс</span>
+              <span className="hidden md:block text-[10px] mt-0.5">Сагс</span>
             </Link>
             {user ? (
-              <div className="relative">
+              <div className="relative hidden md:block">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex flex-col items-center text-primary transition-colors"
                 >
-                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-5 h-5 md:w-6 md:h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                     {user.firstName[0]}{user.lastName[0]}
                   </div>
-                  <span className="text-[10px] mt-0.5">{user.firstName}</span>
+                  <span className="hidden md:block text-[10px] mt-0.5">{user.firstName}</span>
                 </button>
 
                 {userMenuOpen && (
@@ -401,7 +412,7 @@ export default function Header() {
                 )}
               </div>
             ) : (
-              <Link href="/account" className="flex flex-col items-center text-gray-500 hover:text-primary transition-colors">
+              <Link href="/account" className="hidden md:flex flex-col items-center text-gray-500 hover:text-primary transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                 <span className="text-[10px] mt-0.5">Бүртгэл</span>
               </Link>
@@ -415,32 +426,40 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Category Nav */}
-      <nav className="bg-primary">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center overflow-x-auto scrollbar-hide">
-            {categories.map(cat => (
-              <Link
-                key={cat.href}
-                href={cat.href}
-                className="text-white text-sm font-medium px-4 py-3 hover:bg-primary-dark transition-colors whitespace-nowrap flex-shrink-0 border-r border-red-700 last:border-r-0"
-              >
-                {cat.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </nav>
+      {/* Mega Menu Navigation */}
+      <MegaMenu />
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="lg:hidden bg-white border-b shadow-lg">
+        <div className="lg:hidden bg-white border-b shadow-lg max-h-[80vh] overflow-y-auto">
+          <div className="p-4 bg-primary text-white font-bold flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            Бүх ангилал
+          </div>
           {categories.map(cat => (
             <Link key={cat.href} href={cat.href} onClick={() => setMenuOpen(false)}
               className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100">
               {cat.label}
             </Link>
           ))}
+          <div className="p-2 bg-gray-50 text-xs text-gray-500 font-medium">Онцлох ангилал</div>
+          <Link href="/grocery" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100 flex items-center gap-2">
+            <span>🛒</span> Grocery & Supermarket
+          </Link>
+          <Link href="/fashion" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100 flex items-center gap-2">
+            <span>👕</span> Fashion & Clothing
+          </Link>
+          <Link href="/electronics" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100 flex items-center gap-2">
+            <span>💻</span> Electronics
+          </Link>
+          <Link href="/beauty" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100 flex items-center gap-2">
+            <span>💄</span> Beauty & Personal Care
+          </Link>
+          <Link href="/home-living" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-primary border-b border-gray-100 flex items-center gap-2">
+            <span>🏠</span> Home & Living
+          </Link>
         </div>
       )}
     </header>
