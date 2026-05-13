@@ -50,14 +50,13 @@ export default function MobileBottomNav() {
   }, []);
 
   return (
-    <nav className="md:hidden fixed left-0 right-0 bottom-0 z-50 bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-2">
-        <div className="flex items-stretch">
+    <nav className="md:hidden fixed left-0 right-0 bottom-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+      <div className="flex items-stretch" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
           <Item
             href="/"
             label="Нүүр"
             icon={
-              <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" className="transition-all duration-200">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="transition-all duration-200">
                 <path
                   strokeWidth="1.7"
                   strokeLinecap="round"
@@ -124,7 +123,6 @@ export default function MobileBottomNav() {
               </svg>
             }
           />
-        </div>
       </div>
     </nav>
   );

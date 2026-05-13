@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Бидний тухай | Turbotech' };
+export const metadata: Metadata = { title: 'Бидний тухай | Их Наяд Плаза' };
 
 export default function AboutPage() {
   return (
@@ -15,9 +15,9 @@ export default function AboutPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <div className="grid md:grid-cols-2 gap-10 items-center mb-10">
           <div>
-            <h2 className="text-xl font-bold text-[#1565C0] mb-4">TURBOTECH — Электрон барааны дэлгүүр</h2>
+            <h2 className="text-xl font-bold text-[#1565C0] mb-4">Их Наяд Плаза</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Turbotech нь Монгол улсын зах зээлд үйл ажиллагаа явуулдаг тэргүүлэх электроник барааны дэлгүүр юм. Бид таны амьдралыг илүү хялбар, тухтай болгох технологийн шийдлүүдийг санал болгодог.
+              Их Наяд Плаза нь Монгол улсын зах зээлд үйл ажиллагаа явуулдаг тэргүүлэх электроник барааны дэлгүүр юм. Бид таны амьдралыг илүү хялбар, тухтай болгох технологийн шийдлүүдийг санал болгодог.
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
               Манай дэлгүүрт зөөврийн компьютер, суурин компьютер, ухаалаг гар утас, аудио төхөөрөмж, консоль болон бусад олон төрлийн электроник бараа байна.

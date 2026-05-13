@@ -10,10 +10,16 @@
   --color-footer: #0a1628;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background-color: #f5f6f8;
   color: #1a1a2e;
   font-family: 'Inter', 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 .line-clamp-2 {
@@ -22,3 +28,23 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Hide scrollbar but allow scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thin scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+/* Safe area support for mobile bottom nav */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
@@ -20,12 +20,19 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#D32F2F",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="mn" className={inter.variable}>
-      <body className="min-h-screen flex flex-col bg-[#f5f6f8]">
+      <body className="min-h-screen flex flex-col bg-[#f5f6f8] overflow-x-hidden">
         <Header />
         <main className="flex-1 pb-24 md:pb-0">{children}</main>
         <Footer />

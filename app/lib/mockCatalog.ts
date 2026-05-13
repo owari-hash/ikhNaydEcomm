@@ -5,7 +5,16 @@ export type CatalogCategoryKey =
   | 'console'
   | 'audio-equipment'
   | 'home'
-  | 'accessories';
+  | 'accessories'
+  | 'grocery'
+  | 'fresh-fruits'
+  | 'meat-poultry'
+  | 'dairy-eggs'
+  | 'seafood'
+  | 'vegetables'
+  | 'bakery'
+  | 'beverages'
+  | 'snacks';
 
 export type CatalogProduct = {
   id: string;
@@ -29,6 +38,15 @@ export const CATEGORY_LABELS: Record<CatalogCategoryKey, string> = {
   'audio-equipment': 'Аудио төхөөрөмж',
   home: 'Бусад төхөөрөмж',
   accessories: 'Дагалдах хэрэгсэл',
+  grocery: 'Хүнс',
+  'fresh-fruits': 'Жимс, жимсгэнэ',
+  'meat-poultry': 'Мах, махан бүтээгдэхүүн',
+  'dairy-eggs': 'Сүүн бүтээгдэхүүн',
+  seafood: 'Далайн гаралтай бүтээгдэхүүн',
+  vegetables: 'Хүнсний ногоо',
+  bakery: 'Талх, нарийн боов',
+  beverages: 'Ундаа, ус',
+  snacks: 'Зууш, амттан',
 };
 
 export const CATEGORY_ICONS: Record<CatalogCategoryKey, string> = {
@@ -39,6 +57,15 @@ export const CATEGORY_ICONS: Record<CatalogCategoryKey, string> = {
   'audio-equipment': '🎧',
   home: '🏠',
   accessories: '🖱️',
+  grocery: '🛒',
+  'fresh-fruits': '🍎',
+  'meat-poultry': '🥩',
+  'dairy-eggs': '🥛',
+  seafood: '🐟',
+  vegetables: '🥦',
+  bakery: '🥐',
+  beverages: '🥤',
+  snacks: '🥨',
 };
 
 export function formatPrice(n: number) {
@@ -46,6 +73,7 @@ export function formatPrice(n: number) {
 }
 
 export const MOCK_PRODUCTS: CatalogProduct[] = [
+  // Laptops
   {
     id: '10020090',
     slug: 'acer-predator-helios-neo-16-i9-14900hx-16gb-1tb-ssd-rtx-4060-fhd-240hz-10020090',
@@ -81,6 +109,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
       { k: 'Өнгө', v: 'Silver' },
     ],
   },
+  // Computers/Parts
   {
     id: '13030026',
     slug: 'asus-tuf-gaming-geforce-rtx-5070-oc-edition-12gb-gddr7-13030026',
@@ -95,6 +124,7 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
       { k: 'Санах ой', v: '12GB' },
     ],
   },
+  // Audio
   {
     id: '22010001',
     slug: 'sony-wh-1000xm5-22010001',
@@ -110,38 +140,70 @@ export const MOCK_PRODUCTS: CatalogProduct[] = [
       { k: 'Төрөл', v: 'Wireless headphones' },
     ],
   },
+  // Grocery - Fresh Fruits
   {
-    id: '33010001',
-    slug: 'playstation-5-slim-33010001',
-    name: 'PlayStation 5 Slim',
-    brand: 'SONY',
-    category: 'console',
-    price: 1990000,
-    isNew: true,
-    image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop',
-    props: [
-      { k: 'Төлөв', v: 'Шинэ' },
-      { k: 'Төрөл', v: 'Console' },
-    ],
+    id: 'g-001',
+    slug: 'fuji-apple-1kg',
+    name: 'Фужи Алим 1кг',
+    brand: 'Импорт',
+    category: 'fresh-fruits',
+    price: 8500,
+    image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&h=300&fit=crop',
+    props: [{ k: 'Төрөл', v: 'Жимс' }, { k: 'Жин', v: '1кг' }],
   },
+  // Grocery - Meat
   {
-    id: '44010001',
-    slug: 'fantech-xd5-gaming-mouse-44010001',
-    name: 'FANTECH XD5 Gaming Mouse',
-    brand: 'FANTECH',
-    category: 'accessories',
-    price: 45000,
-    oldPrice: 55000,
-    isSale: true,
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=300&fit=crop',
-    props: [
-      { k: 'Төлөв', v: 'Шинэ' },
-      { k: 'Төрөл', v: 'Mouse' },
-    ],
+    id: 'g-002',
+    slug: 'beef-steak-premium',
+    name: 'Үхрийн цул мах (Премиум)',
+    brand: 'Мах Маркет',
+    category: 'meat-poultry',
+    price: 24500,
+    isNew: true,
+    image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop',
+    props: [{ k: 'Төрөл', v: 'Үхрийн мах' }, { k: 'Жин', v: '1кг' }],
+  },
+  // Grocery - Dairy
+  {
+    id: 'g-003',
+    slug: 'suu-milk-1l',
+    name: 'Сүү ХК - Цэвэр сүү 1л',
+    brand: 'СҮҮ ХК',
+    category: 'dairy-eggs',
+    price: 3800,
+    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=300&fit=crop',
+    props: [{ k: 'Төрөл', v: 'Сүү' }, { k: 'Хэмжээ', v: '1л' }],
+  },
+  // Grocery - Bakery
+  {
+    id: 'g-004',
+    slug: 'baguette-fresh',
+    name: 'Франц Багет',
+    brand: 'Батбайгаль',
+    category: 'bakery',
+    price: 2500,
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop',
+    props: [{ k: 'Төрөл', v: 'Талх' }],
+  },
+  // Grocery - Vegetables
+  {
+    id: 'g-005',
+    slug: 'broccoli-organic',
+    name: 'Брокколи (Органик)',
+    brand: 'Дотоодын',
+    category: 'vegetables',
+    price: 6500,
+    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop',
+    props: [{ k: 'Төрөл', v: 'Ногоо' }],
   },
 ];
 
 export function getProductsByCategory(category: CatalogCategoryKey) {
+  if (category === 'grocery') {
+    return MOCK_PRODUCTS.filter((p) => 
+      ['fresh-fruits', 'meat-poultry', 'dairy-eggs', 'seafood', 'vegetables', 'bakery', 'beverages', 'snacks'].includes(p.category)
+    );
+  }
   return MOCK_PRODUCTS.filter((p) => p.category === category);
 }
 
@@ -152,4 +214,3 @@ export function getProductBySlug(slug: string) {
 export function getRelatedProducts(p: CatalogProduct) {
   return MOCK_PRODUCTS.filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 12);
 }
-

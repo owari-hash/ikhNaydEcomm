@@ -185,6 +185,7 @@ export default function CategoryListingClient({ category, products }: Props) {
 
   return (
     <div className="flex gap-6">
+      {/* Desktop Filters */}
       <aside aria-label="filters" className="hidden lg:block w-72 shrink-0 space-y-4">
         <FiltersPanel
           sections={sections}
@@ -198,24 +199,66 @@ export default function CategoryListingClient({ category, products }: Props) {
         />
       </aside>
 
+      {/* Mobile Filters Modal */}
+      {mobileFiltersOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/50">
+          <div className="absolute inset-0 overflow-y-auto">
+            <div className="bg-white min-h-full p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-black text-gray-900">Шүүлтүүр</h3>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="text-gray-500 hover:text-primary"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <FiltersPanel
+                sections={sections}
+                setSections={setSections}
+                brandQuery={brandQuery}
+                setBrandQuery={setBrandQuery}
+                visibleBrands={visibleBrands}
+                selectedBrands={selectedBrands}
+                setSelectedBrands={setSelectedBrands}
+                onClearAll={clearAll}
+              />
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                className="w-full mt-4 bg-primary text-white py-3 rounded-lg font-bold"
+              >
+                Хаах ({filtered.length} бараа)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 min-w-0">
-        <section aria-label="title, sort, and brand filter" className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-black text-gray-900">
-              {category.label} <span className="text-gray-400 font-bold">Түр хүлээнэ үү...</span>
+        <section aria-label="title, sort, and brand filter" className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3 md:p-4 mb-4">
+          <div className="flex items-center justify-between gap-2 md:gap-3">
+            <h2 className="text-base md:text-lg font-black text-gray-900">
+              {category.label}
             </h2>
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="lg:hidden text-sm font-bold border border-gray-200 rounded-xl px-3 py-2 text-gray-700 hover:border-gray-300"
+                className="lg:hidden text-sm font-bold border border-gray-200 rounded-xl px-2 py-1.5 md:px-3 md:py-2 text-gray-700 hover:border-gray-300"
                 onClick={() => setMobileFiltersOpen(true)}
               >
-                Шүүлтүүр
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" />
+                </svg>
+                <span className="hidden sm:inline">Шүүлтүүр</span>
               </button>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as 'default' | 'price_asc' | 'price_desc')}
-                className="text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary bg-white text-gray-700 font-semibold"
+                className="text-sm border border-gray-200 rounded-xl px-2 py-1.5 md:px-3 md:py-2 focus:outline-none focus:border-primary bg-white text-gray-700 font-semibold"
                 aria-label="sort"
               >
                 <option value="default">Энгийн</option>
@@ -225,7 +268,7 @@ export default function CategoryListingClient({ category, products }: Props) {
             </div>
           </div>
 
-          <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
+          <div className="mt-2 md:mt-3 flex items-center justify-between text-sm text-gray-500">
             <div>
               Олдсон: <span className="font-bold text-gray-900">{filtered.length}</span>
             </div>
@@ -238,36 +281,27 @@ export default function CategoryListingClient({ category, products }: Props) {
           </div>
 
           {activeBrands.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-2 md:mt-3 flex flex-wrap gap-1 md:gap-2">
               {activeBrands.map((b) => (
                 <button
                   key={b}
-                  type="button"
-                  className="px-3 py-1.5 rounded-full bg-red-50 text-primary border border-red-100 text-xs font-bold"
-                  onClick={() => setSelectedBrands((s) => ({ ...s, [b]: false }))}
+                  className="px-2 py-1 text-xs font-bold rounded-full bg-gray-50 text-gray-600 border border-gray-200"
                 >
-                  {b} ×
+                  {b}
                 </button>
               ))}
-              <button
-                type="button"
-                className="px-3 py-1.5 rounded-full bg-gray-50 text-gray-600 border border-gray-200 text-xs font-bold"
-                onClick={clearAll}
-              >
-                Бүгдийг цэвэрлэх
-              </button>
             </div>
           )}
         </section>
 
-        <section aria-label="product list" className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+        <section aria-label="product list" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
           {filtered.map((p) => (
             <Link
               key={p.id}
               href={`/product/${p.slug}`}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
             >
-              <div className="relative h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
+              <div className="relative h-36 md:h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
                 {p.image ? (
                   <img 
                     src={p.image} 
@@ -276,16 +310,16 @@ export default function CategoryListingClient({ category, products }: Props) {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="text-6xl opacity-60">{category.icon}</div>
+                  <div className="text-4xl md:text-6xl opacity-60">{category.icon}</div>
                 )}
                 {p.badge && (
-                  <div className={`absolute top-2 left-2 text-xs font-black px-2 py-1 rounded-lg text-white ${p.badge === 'Шинэ' ? 'bg-primary' : 'bg-red-500'}`}>
+                  <div className={`absolute top-1.5 md:top-2 left-1.5 md:left-2 text-xs md:text-xs font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg text-white ${p.badge === 'Шинэ' ? 'bg-primary' : 'bg-red-500'}`}>
                     {p.badge}
                   </div>
                 )}
                 <button
                   type="button"
-                  className="absolute top-2 right-2 text-gray-300 hover:text-red-400 text-xl"
+                  className="absolute top-1.5 md:top-2 right-1.5 md:right-2 text-gray-300 hover:text-red-400 text-lg md:text-xl"
                   onClick={(e) => {
                     e.preventDefault();
                   }}
@@ -293,9 +327,9 @@ export default function CategoryListingClient({ category, products }: Props) {
                   ♡
                 </button>
               </div>
-              <div className="p-3">
-                <div className="text-[10px] text-gray-400 font-black uppercase tracking-wide mb-1">{p.brand}</div>
-                <div className="text-sm font-bold text-gray-800 leading-snug">
+              <div className="p-2 md:p-3">
+                <div className="text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-wide mb-1">{p.brand}</div>
+                <div className="text-xs md:text-sm font-bold text-gray-800 leading-snug">
                   <span
                     style={{
                       display: '-webkit-box',
@@ -307,13 +341,13 @@ export default function CategoryListingClient({ category, products }: Props) {
                     {p.name}
                   </span>
                 </div>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <div className="text-base font-black text-gray-900">{p.price}</div>
-                  {p.oldPrice && <div className="text-xs text-gray-400 line-through font-semibold">{p.oldPrice}</div>}
+                <div className="mt-1.5 md:mt-2 flex items-baseline gap-2">
+                  <div className="text-sm md:text-base font-black text-gray-900">{p.price}</div>
+                  {p.oldPrice && <div className="text-[10px] md:text-xs text-gray-400 line-through font-semibold">{p.oldPrice}</div>}
                 </div>
                 <button
                   type="button"
-                  className="mt-3 w-full bg-primary hover:bg-primary-dark text-white text-xs font-black py-2 rounded-xl transition-colors"
+                  className="mt-2 md:mt-3 w-full bg-primary hover:bg-primary-dark text-white text-xs md:text-xs font-black py-1.5 md:py-2 rounded-lg md:rounded-xl transition-colors"
                   onClick={(e) => {
                     e.preventDefault();
                     const price = parsePrice(p.price);
@@ -324,12 +358,12 @@ export default function CategoryListingClient({ category, products }: Props) {
                       slug: p.slug,
                       price,
                       oldPrice,
-                      icon: category.icon,
                       brand: p.brand,
+                      icon: category.icon,
                     });
-                    setToastMsg(`${p.name} сагсанд нэмэгдлээ`);
+                    setToastMsg('Бүтээгдэхүүнийг сагсанд нэмлээ!');
                     setShowToast(true);
-                    setTimeout(() => setShowToast(false), 2000);
+                    setTimeout(() => setShowToast(false), 3000);
                   }}
                 >
                   Сагсанд нэмэх

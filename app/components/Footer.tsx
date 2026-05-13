@@ -37,15 +37,18 @@ const footerSections = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a1628] text-gray-300 mt-10">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+    <footer className="bg-[#0a1628] text-gray-300 mt-10 mb-20 md:mb-0">
+      <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-6 md:gap-8">
           {/* Logo & Contact */}
-          <div className="lg:col-span-2">
-            <div className="mb-4">
-              <span className="text-2xl font-black text-white tracking-tight">
-                ИХ <span className="text-orange-500">НАЯД</span>
-              </span>
+          <div className="col-span-2 lg:col-span-2">
+            <div className="mb-4 flex items-center gap-3">
+              <img 
+                src="/logo.png" 
+                alt="Их Наяд" 
+                className="h-10 w-auto object-contain"
+              />
+             
             </div>
             <div className="space-y-2 text-sm">
               <div className="font-semibold text-white mb-2">Холбоо барих</div>

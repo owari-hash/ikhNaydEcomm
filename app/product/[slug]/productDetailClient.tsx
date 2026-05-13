@@ -73,39 +73,18 @@ export default function ProductDetailClient({ product }: Props) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Images */}
-      <section aria-label="images" className="grid grid-cols-6 gap-3">
-        <div className="col-span-1 flex flex-col gap-2">
-          {images.map((img, i) => (
-            <button
-              key={img.id}
-              type="button"
-              onClick={() => setImgIdx(i)}
-              className={`rounded-xl border overflow-hidden h-16 bg-gray-50 ${
-                i === imgIdx ? 'border-primary' : 'border-gray-200 hover:border-gray-300'
-              }`}
-              aria-label={img.label}
-            >
-              <div className="h-full w-full flex items-center justify-center">
-                {img.isImage ? (
-                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="text-2xl opacity-60">{product.icon}</div>
-                )}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div className="col-span-5 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden relative">
-          <div className="h-[360px] flex items-center justify-center">
+      <section aria-label="images" className="flex flex-col gap-3">
+        {/* Main image */}
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden relative">
+          <div className="h-64 sm:h-80 md:h-[360px] flex items-center justify-center">
             {images[imgIdx]?.isImage ? (
-              <img 
-                src={images[imgIdx].src} 
+              <img
+                src={images[imgIdx].src}
                 alt={images[imgIdx].alt}
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="text-8xl opacity-50 select-none">{product.icon}</div>
+              <div className="text-7xl sm:text-8xl opacity-50 select-none">{product.icon}</div>
             )}
           </div>
 
@@ -136,6 +115,29 @@ export default function ProductDetailClient({ product }: Props) {
               Next
             </button>
           </div>
+        </div>
+
+        {/* Thumbnails — horizontal scroll on mobile */}
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+          {images.map((img, i) => (
+            <button
+              key={img.id}
+              type="button"
+              onClick={() => setImgIdx(i)}
+              className={`rounded-xl border overflow-hidden shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-gray-50 ${
+                i === imgIdx ? 'border-primary' : 'border-gray-200 hover:border-gray-300'
+              }`}
+              aria-label={img.label}
+            >
+              <div className="h-full w-full flex items-center justify-center">
+                {img.isImage ? (
+                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-xl opacity-60">{product.icon}</div>
+                )}
+              </div>
+            </button>
+          ))}
         </div>
       </section>
 
@@ -368,20 +370,20 @@ export default function ProductDetailClient({ product }: Props) {
 
         {/* Tabs */}
         <div className="mt-8">
-          <div className="flex gap-2 border-b border-gray-200">
+          <div className="flex gap-1 border-b border-gray-200 overflow-x-auto scrollbar-hide">
             <button
               type="button"
               onClick={() => setTab('details')}
-              className={`px-3 py-2 text-sm font-bold ${
+              className={`shrink-0 px-3 py-2 text-xs sm:text-sm font-bold whitespace-nowrap ${
                 tab === 'details' ? 'text-primary border-b-2 border-primary' : 'text-gray-500'
               }`}
             >
-              Бүтээгдэхүүний дэлгэрэнгүй
+              Дэлгэрэнгүй
             </button>
             <button
               type="button"
               onClick={() => setTab('specs')}
-              className={`px-3 py-2 text-sm font-bold ${
+              className={`shrink-0 px-3 py-2 text-xs sm:text-sm font-bold whitespace-nowrap ${
                 tab === 'specs' ? 'text-primary border-b-2 border-primary' : 'text-gray-500'
               }`}
             >
@@ -390,11 +392,11 @@ export default function ProductDetailClient({ product }: Props) {
             <button
               type="button"
               onClick={() => setTab('reviews')}
-              className={`px-3 py-2 text-sm font-bold ${
+              className={`shrink-0 px-3 py-2 text-xs sm:text-sm font-bold whitespace-nowrap ${
                 tab === 'reviews' ? 'text-primary border-b-2 border-primary' : 'text-gray-500'
               }`}
             >
-              Үнэлгээ, сэтгэгдэл (0)
+              Сэтгэгдэл (0)
             </button>
           </div>
 
