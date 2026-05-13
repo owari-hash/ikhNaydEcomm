@@ -28,11 +28,11 @@ function Item({
     >
       <span className="h-6 w-6 relative">
         {icon}
-        {badge && badge > 0 && (
+        {badge !== undefined && badge > 0 ? (
           <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
             {badge > 99 ? '99+' : badge}
           </span>
-        )}
+        ) : null}
       </span>
       <span className="text-[10px] font-medium">{label}</span>
     </Link>

@@ -28,6 +28,7 @@ export default function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -84,7 +85,8 @@ export default function Header() {
       icon: CATEGORY_ICONS[product.category],
       brand: product.brand,
     });
-    alert('Сагсанд нэмлээ!');
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,18 +279,26 @@ export default function Header() {
               <span className="text-[10px] mt-0.5">Харьцуулах</span>
             </Link>
 
-            {/* Cart — visible on mobile too */}
             <Link href="/checkout" className="flex flex-col items-center text-gray-500 hover:text-primary transition-colors relative">
               <div className="relative">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                {cartCount > 0 && (
+                {cartCount > 0 ? (
                   <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
                     {cartCount > 99 ? '99+' : cartCount}
                   </span>
-                )}
+                ) : null}
               </div>
               <span className="hidden sm:block text-[10px] mt-0.5">Сагс</span>
             </Link>
+
+            {/* Toast Notification */}
+            {showToast && (
+              <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100]">
+                <div className="bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-bounce">
+                  Бүтээгдэхүүнийг сагсанд нэмлээ! 🛒
+                </div>
+              </div>
+            )}
 
             {user ? (
               <div className="relative hidden md:block">
