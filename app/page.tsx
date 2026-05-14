@@ -9,7 +9,6 @@ import Carousel from './components/Carousel';
 import GroceryBentoMobile from './components/GroceryBentoMobile';
 import ProductCard from './components/ProductCard';
 import ServiceBento from './components/ServiceBento';
-import ElectroBorder from './components/ElectroBorder';
 
 function SectionTitle({
   title,
@@ -512,7 +511,7 @@ export default function HomePage() {
 
       {/* Quick Categories Section */}
       <section className="max-w-7xl mx-auto px-4 mt-12 mb-8">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-black text-gray-900 tracking-tight">Ангилал</h2>
           <Link href="/categories" className="text-sm font-bold text-primary hover:underline">
             Бүгдийг харах →
@@ -520,59 +519,29 @@ export default function HomePage() {
         </div>
 
         {(() => {
-          const gradients = [
-            'from-blue-400 to-indigo-500',
-            'from-violet-400 to-purple-600',
-            'from-orange-400 to-orange-500',
-            'from-rose-400 to-red-600',
-            'from-emerald-400 to-teal-600',
-            'from-sky-400 to-cyan-600',
-            'from-amber-400 to-orange-500',
-            'from-green-400 to-emerald-600',
-            'from-pink-400 to-rose-500',
-            'from-red-400 to-rose-600',
-            'from-yellow-400 to-amber-500',
-            'from-blue-300 to-cyan-500',
-            'from-green-500 to-green-700',
-            'from-amber-300 to-yellow-500',
-            'from-purple-400 to-violet-600',
-            'from-orange-300 to-red-400',
-          ];
           const allItems = [
-            ...(Object.keys(CATEGORY_LABELS) as CatalogCategoryKey[]).map((k, i) => ({
+            ...(Object.keys(CATEGORY_LABELS) as CatalogCategoryKey[]).map((k) => ({
               key: k,
               href: `/${k}`,
               icon: CATEGORY_ICONS[k],
               label: CATEGORY_LABELS[k],
-              gradient: gradients[i % gradients.length],
             })),
-            { key: 'brands', href: '/brands', icon: '🏷️', label: 'Брэндүүд', gradient: 'from-gray-400 to-gray-600' },
+            { key: 'brands', href: '/brands', icon: '🏷️', label: 'Брэндүүд' },
           ];
           return (
-            <div className="flex overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 gap-3 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-9 sm:gap-3">
+            <div className="flex overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 gap-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-9 sm:gap-4">
               {allItems.map((item) => (
                 <Link
                   key={item.key}
                   href={item.href}
-                  className="group flex flex-col items-center text-center shrink-0 w-[72px] sm:w-auto"
+                  className="group flex flex-col items-center text-center shrink-0 w-[72px] sm:w-auto gap-2"
                 >
-                  <ElectroBorder
-                    borderColor="#ffffff"
-                    borderWidth={1.5}
-                    distortion={0.7}
-                    animationSpeed={0.5}
-                    radius="1rem"
-                    glowBlur={10}
-                    aura={false}
-                    className="w-14 h-14 sm:w-16 sm:h-16 mb-2 group-hover:scale-110 transition-transform duration-200"
-                  >
-                    <div className={`w-full h-full rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-2xl sm:text-3xl shadow-md`}>
-                      {item.icon}
-                    </div>
-                  </ElectroBorder>
-                  <div className="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-primary transition-colors leading-tight">
-                    {item.label}
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-gray-200 group-hover:border-primary flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 transition-all duration-200">
+                    {item.icon}
                   </div>
+                  <span className="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-primary transition-colors leading-tight">
+                    {item.label}
+                  </span>
                 </Link>
               ))}
             </div>

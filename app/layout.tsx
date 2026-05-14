@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MobileBottomNav from "./components/MobileBottomNav";
 import CompareBar from "./components/CompareBar";
+import ScrollToTop from "./components/ScrollToTop";
 import NavigationProgress from "./components/NavigationProgress";
 
 const inter = Inter({
@@ -41,6 +42,7 @@ export default function RootLayout({
         <Footer />
         <MobileBottomNav />
         <CompareBar />
+        <ScrollToTop />
       </body>
     </html>
   );

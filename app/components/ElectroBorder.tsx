@@ -175,7 +175,7 @@ export const ElectroBorder: React.FC<ElectroBorderProps> = ({
                 {effects && glow && <div className="absolute inset-0" style={glowLayer2} />}
                 {effects && aura && <div className="absolute inset-0" style={backgroundAura} />}
             </div>
-            <div className="relative z-10" style={radiusStyle}>
+            <div className="relative z-10 w-full h-full" style={radiusStyle}>
                 {children}
             </div>
         </div>

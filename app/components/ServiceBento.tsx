@@ -35,7 +35,7 @@ const SERVICES = [
     label: 'Засвар & Баталгаа',
     sub: 'Албан ёсны засварын үйлчилгээ',
     emoji: '🔧',
-    image: 'https://images.unsplash.com/photo-1581092921461-39a4c60a1d4b?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
   },
   {
     href: '/installation',
