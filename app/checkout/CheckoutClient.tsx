@@ -419,7 +419,7 @@ export default function CheckoutClient() {
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500">Лизингийн дэлгэрэнгүй мэдээлэл авахыг хүсвэл 7777-7734 дугаарт холбогдоно уу</p>
+                <p className="text-xs text-gray-500">Лизингийн дэлгэрэнгүй мэдээлэл авахыг хүсвэл 7709 1155 дугаарт холбогдоно уу</p>
               </div>
             )}
 
