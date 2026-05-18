@@ -65,7 +65,38 @@ export default async function RootLayout({
   logDebug(`Resolved config tenantId: ${config ? config.tenantId : 'null'}`);
 
   if (!config) {
-    notFound();
+    return (
+      <html lang="mn" className={inter.variable}>
+        <head>
+          <title>Суваг олдсонгүй | Их Наяд Плаза</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+          <style>{`
+            body {
+              font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+            }
+          `}</style>
+        </head>
+        <body className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4">
+          <div className="max-w-md w-full text-center bg-white p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100/80 transition-all">
+            <div className="text-8xl mb-6 select-none animate-bounce" style={{ display: 'inline-block', animationDuration: '3s' }}>🔍</div>
+            <h1 className="text-6xl font-black text-rose-600 mb-4 tracking-tight">404</h1>
+            <h2 className="text-2xl font-bold text-slate-800 mb-3 tracking-wide">Сайт олдсонгүй</h2>
+            <p className="text-slate-400 mb-8 leading-relaxed text-sm">
+              Таны хандахыг хүссэн цахим дэлгүүр (суваг) олдсонгүй. Хаягаа зөв оруулсан эсэхээ шалгана уу.
+            </p>
+            <a 
+              href="http://103.236.194.106:7000/"
+              className="inline-block w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-[0_10px_20px_rgba(225,29,72,0.2)] hover:shadow-[0_10px_25px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:translate-y-0 select-none text-sm tracking-wide"
+              style={{ textDecoration: 'none' }}
+            >
+              Үндсэн сайт руу буцах
+            </a>
+          </div>
+        </body>
+      </html>
+    );
   }
 
   // Override Tailwind @theme defaults with tenant branding
