@@ -33,6 +33,8 @@ export const viewport: Viewport = {
   themeColor: "#D32F2F",
 };
 
+import { notFound } from "next/navigation";
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -40,6 +42,10 @@ export default async function RootLayout({
   const host = headersList.get("x-tenant-host") ?? headersList.get("host") ?? "localhost";
   const tenantSlug = headersList.get("x-tenant-slug");
   const config = await fetchTenantConfig(host, tenantSlug);
+
+  if (!config) {
+    notFound();
+  }
 
   // Override Tailwind @theme defaults with tenant branding
   const cssVars = `

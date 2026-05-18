@@ -1,9 +1,13 @@
 import { cache } from 'react'
 
 export interface TenantBranding {
+  name?: string
   logo: string
   primaryColor: string
+  secondaryColor?: string
+  accentColor?: string
   font: string
+  description?: string
 }
 
 export interface SectionConfig {
@@ -22,16 +26,24 @@ export interface TenantFeatures {
   loyaltyProgram: boolean
 }
 
+export interface TenantContact {
+  email: string
+  phone: string
+  address: string
+}
+
 export interface TenantConfig {
   tenantId: string
   branding: TenantBranding
   theme: TenantTheme
   features: TenantFeatures
+  contact?: TenantContact
 }
 
 const DEFAULT_CONFIG: TenantConfig = {
   tenantId: 'default',
   branding: {
+    name: 'Их Наяд',
     logo: '',
     primaryColor: '#D32F2F',
     font: 'Inter',
@@ -48,9 +60,14 @@ const DEFAULT_CONFIG: TenantConfig = {
     ],
   },
   features: { reviews: false, chat: false, loyaltyProgram: false },
+  contact: {
+    email: 'info@ikhnayd.mn',
+    phone: '7709 1155',
+    address: 'Улаанбаатар',
+  }
 }
 
-export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string | null): Promise<TenantConfig> => {
+export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string | null): Promise<TenantConfig | null> => {
   if (process.env.USE_MOCK_DATA === 'true') {
     return DEFAULT_CONFIG
   }
@@ -67,7 +84,10 @@ export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string 
     })
 
     if (!res.ok) {
-      console.warn(`[tenantConfig] /api/config returned ${res.status} for host ${host}, using default`)
+      console.warn(`[tenantConfig] /api/config returned ${res.status} for host ${host}`)
+      if (res.status === 404) {
+        return null
+      }
       return DEFAULT_CONFIG
     }
 
