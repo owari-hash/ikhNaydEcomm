@@ -67,6 +67,16 @@ const DEFAULT_CONFIG: TenantConfig = {
   }
 }
 
+import fs from "fs";
+import path from "path";
+
+function logDebug(msg: string) {
+  try {
+    const logPath = path.join(process.cwd(), "debug.log");
+    fs.appendFileSync(logPath, `${new Date().toISOString()} [tenantConfig] ${msg}\n`);
+  } catch (e) {}
+}
+
 export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string | null): Promise<TenantConfig | null> => {
   if (process.env.USE_MOCK_DATA === 'true') {
     return DEFAULT_CONFIG
@@ -77,23 +87,29 @@ export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string 
     ? `${apiUrl}/api/config?tenant=${encodeURIComponent(tenantSlug)}`
     : `${apiUrl}/api/config`
 
+  logDebug(`Fetching config from: ${url}`);
+
   try {
     const res = await fetch(url, {
       headers: { host, 'x-tenant-host': host },
       next: { revalidate: 60 },
     })
 
+    logDebug(`Fetch status: ${res.status} for URL: ${url}`);
+
     if (!res.ok) {
-      console.warn(`[tenantConfig] /api/config returned ${res.status} for host ${host}`)
+      logDebug(`Fetch failed, status: ${res.status}`);
       if (res.status === 404) {
         return null
       }
       return DEFAULT_CONFIG
     }
 
-    return res.json()
-  } catch (err) {
-    console.warn('[tenantConfig] Failed to fetch config, using default:', err)
+    const data = await res.json()
+    logDebug(`Fetch successful, tenantId: ${data.tenantId}`);
+    return data
+  } catch (err: any) {
+    logDebug(`Fetch catch error: ${err.message}`);
     return DEFAULT_CONFIG
   }
 })
