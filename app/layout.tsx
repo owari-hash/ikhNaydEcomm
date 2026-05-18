@@ -34,6 +34,17 @@ export const viewport: Viewport = {
 };
 
 import { notFound } from "next/navigation";
+import fs from "fs";
+import path from "path";
+
+function logDebug(msg: string) {
+  try {
+    const logPath = path.join(process.cwd(), "debug.log");
+    fs.appendFileSync(logPath, `${new Date().toISOString()} [layout] ${msg}\n`);
+  } catch (e: any) {
+    console.error("DEBUG LOG WRITE FAILED:", e.message);
+  }
+}
 
 export default async function RootLayout({
   children,
@@ -41,7 +52,17 @@ export default async function RootLayout({
   const headersList = await headers();
   const host = headersList.get("x-tenant-host") ?? headersList.get("host") ?? "localhost";
   const tenantSlug = headersList.get("x-tenant-slug");
+
+  const allHeaders: Record<string, string> = {};
+  headersList.forEach((value, key) => {
+    allHeaders[key] = value;
+  });
+
+  logDebug(`host: ${host}, tenantSlug: ${tenantSlug}`);
+  logDebug(`Headers: ${JSON.stringify(allHeaders)}`);
+
   const config = await fetchTenantConfig(host, tenantSlug);
+  logDebug(`Resolved config tenantId: ${config ? config.tenantId : 'null'}`);
 
   if (!config) {
     notFound();
