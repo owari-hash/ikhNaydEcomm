@@ -92,7 +92,7 @@ export const fetchTenantConfig = cache(async (host: string, tenantSlug?: string 
   try {
     const res = await fetch(url, {
       headers: { host, 'x-tenant-host': host },
-      next: { revalidate: 60 },
+      cache: 'no-store',
     })
 
     logDebug(`Fetch status: ${res.status} for URL: ${url}`);
