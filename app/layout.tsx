@@ -17,14 +17,22 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  title: "Их Наяд Плаза",
-  description: "Бүх төрлийн бараа, хэрэгсэл",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const host = headersList.get("x-tenant-host") ?? headersList.get("host") ?? "localhost";
+  const tenantSlug = headersList.get("x-tenant-slug");
+  
+  const config = await fetchTenantConfig(host, tenantSlug);
+
+  return {
+    title: config?.branding?.name || "Дэлгүүр",
+    description: config?.branding?.description || "Бүх төрлийн бараа, хэрэгсэл",
+    icons: {
+      icon: config?.branding?.logo || "/logo.png",
+      apple: config?.branding?.logo || "/logo.png",
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
