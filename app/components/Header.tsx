@@ -7,6 +7,7 @@ import { readAuth, logout, type User } from '../lib/authStore';
 import { MOCK_PRODUCTS, CATEGORY_ICONS, CATEGORY_LABELS, formatPrice, type CatalogCategoryKey } from '../lib/mockCatalog';
 import { addToCart } from '../lib/cartStore';
 import MegaMenu from './MegaMenu';
+import { useTenant } from '../lib/TenantContext';
 
 const categories = [
   { label: 'Зөөврийн компьютер', href: '/laptop' },
@@ -20,6 +21,7 @@ const categories = [
 ];
 
 export default function Header() {
+  const { branding, contact } = useTenant();
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -173,13 +175,13 @@ export default function Header() {
       <div className="hidden sm:block bg-[#0a1628] text-white text-xs py-2">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <a href="tel:" className="hover:text-red-300 transition-colors flex items-center gap-1">
+            <a href={`tel:${contact?.phone || '7709 1155'}`} className="hover:text-red-300 transition-colors flex items-center gap-1">
               <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-              7709 1155
+              {contact?.phone || '7709 1155'}
             </a>
-            <a href="mailto:info@ikhnayd.mn" className="hover:text-red-300 transition-colors flex items-center gap-1">
+            <a href={`mailto:${contact?.email}`} className="hover:text-red-300 transition-colors flex items-center gap-1">
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-              info@ikhnayd.mn
+              {contact?.email}
             </a>
           </div>
           <span className="text-gray-300 flex items-center gap-1">
@@ -193,8 +195,13 @@ export default function Header() {
       <div className="bg-white border-b border-gray-100 py-2">
         <div className="max-w-7xl mx-auto px-3 flex items-center gap-2">
           {/* Logo */}
-          <Link href="/" className="shrink-0">
-            <img src="/logo.png" alt="Их Наяд" className="h-8 sm:h-10 w-auto object-contain" />
+          <Link href="/" className="shrink-0 flex items-center gap-2">
+            {branding.logo ? (
+              <img src={branding.logo} alt={branding.name || "Logo"} className="h-8 sm:h-10 w-auto object-contain max-w-[200px]" />
+            ) : (
+              <img src="/logo.png" alt={branding.name || "Logo"} className="h-8 sm:h-10 w-auto object-contain" />
+            )}
+            {!branding.logo && branding.name && <span className="font-bold text-lg text-primary">{branding.name}</span>}
           </Link>
 
           {/* Mobile: search icon triggers full-screen modal */}

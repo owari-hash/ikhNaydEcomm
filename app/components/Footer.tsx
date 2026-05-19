@@ -35,7 +35,10 @@ const footerSections = [
   },
 ];
 
+import { useTenant } from '../lib/TenantContext';
+
 export default function Footer() {
+  const { branding, contact } = useTenant();
   return (
     <footer className="bg-[#0a1628] text-gray-300 mt-10 mb-20 md:mb-0">
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
@@ -43,26 +46,26 @@ export default function Footer() {
           {/* Logo & Contact */}
           <div className="col-span-2 lg:col-span-2">
             <div className="mb-4 flex items-center gap-3">
-              <img 
-                src="/logo.png" 
-                alt="Их Наяд" 
-                className="h-10 w-auto object-contain"
-              />
-             
+              {branding.logo ? (
+                <img src={branding.logo} alt={branding.name || "Logo"} className="h-10 w-auto object-contain max-w-[200px]" />
+              ) : (
+                <img src="/logo.png" alt={branding.name || "Logo"} className="h-10 w-auto object-contain" />
+              )}
+              {!branding.logo && branding.name && <span className="font-bold text-lg text-white">{branding.name}</span>}
             </div>
             <div className="space-y-2 text-sm">
               <div className="font-semibold text-white mb-2">Холбоо барих</div>
-              <a href="tel:" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href={`tel:${contact?.phone || '7709 1155'}`} className="flex items-center gap-2 hover:text-white transition-colors">
                 <svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                7709 1155
+                {contact?.phone || '7709 1155'}
               </a>
-              <a href="mailto:info@gmail.mn" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href={`mailto:${contact?.email}`} className="flex items-center gap-2 hover:text-white transition-colors">
                 <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                info@ikhnayd.mn
+                {contact?.email}
               </a>
               <p className="flex items-start gap-2 text-xs text-gray-400 mt-3 leading-relaxed">
                 <svg className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Их Наяд худалдааны төв, Зүүн өндөр 3 давхарт 309 тоот
+                {contact?.address}
               </p>
             </div>
           </div>
@@ -89,7 +92,7 @@ export default function Footer() {
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 gap-2">
           <span>© 2026. Бүх эрх хуулиар хамгаалагдсан.</span>
-          <span>Powered by Их Наяд</span>
+          <span>Powered by {branding.name || 'Их Наяд'}</span>
         </div>
       </div>
     </footer>
