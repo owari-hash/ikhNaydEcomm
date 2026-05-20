@@ -171,7 +171,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
             category={{ key: categoryKey, label, icon: '📦' }}
             products={filteredProducts.map((p: any) => ({
               id: p.id,
-              slug: p.slug,
+              slug: p.slug || p.id,
               name: p.name,
               brand: p.brandId || 'Дэлгүүр',
               price: formatPrice(p.salePrice ? p.salePrice : p.price),
