@@ -1,17 +1,65 @@
+'use client'
+
 import Link from 'next/link'
-import { CATEGORY_ICONS, CATEGORY_LABELS, type CatalogCategoryKey } from '../lib/mockCatalog'
+import { useEffect, useState } from 'react'
+import { useTenant } from '../lib/TenantContext'
+import { CATEGORY_ICONS } from '../lib/mockCatalog'
 
 interface CategoryListProps {
   showBrands?: boolean
 }
 
+interface Category {
+  id: string
+  name: string
+  slug: string
+  parentId: string | null
+  image?: string
+  status: string
+}
+
 export default function CategoryList({ showBrands = true }: CategoryListProps) {
+  const { tenantId } = useTenant()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+    fetch(`${apiUrl}/api/categories/public?tenantId=${tenantId}`)
+      .then((res) => res.json())
+      .then((body) => {
+        if (body && body.data) {
+          // Only show active parent categories on homepage list
+          const activeRoots = body.data.filter((c: Category) => c.status === 'active' && !c.parentId)
+          setCategories(activeRoots)
+        }
+      })
+      .catch((err) => console.error('Failed to fetch categories', err))
+      .finally(() => setLoading(false))
+  }, [tenantId])
+
+  if (loading) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 mt-12 mb-8 animate-pulse">
+        <div className="h-6 bg-gray-200 rounded w-1/4 mb-6" />
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-2">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gray-200" />
+              <div className="h-3 bg-gray-200 rounded w-12" />
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
   const items = [
-    ...(Object.keys(CATEGORY_LABELS) as CatalogCategoryKey[]).map((k) => ({
-      key: k,
-      href: `/${k}`,
-      icon: CATEGORY_ICONS[k],
-      label: CATEGORY_LABELS[k],
+    ...categories.map((c) => ({
+      key: c.id,
+      href: `/${c.slug}`,
+      icon: c.image || CATEGORY_ICONS[c.slug as keyof typeof CATEGORY_ICONS] || '📁',
+      label: c.name,
     })),
     ...(showBrands ? [{ key: 'brands', href: '/brands', icon: '🏷️', label: 'Брэндүүд' }] : []),
   ]

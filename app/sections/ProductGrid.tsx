@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
-import { MOCK_PRODUCTS } from '../lib/mockCatalog'
+import { useEffect, useState } from 'react'
+import { useTenant } from '../lib/TenantContext'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 
@@ -26,14 +29,60 @@ export default function ProductGrid({
   category,
   viewAllHref,
 }: ProductGridProps) {
-  let products = MOCK_PRODUCTS
+  const { tenantId } = useTenant()
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  if (isNew) products = products.filter((p) => p.isNew)
-  if (isSale) products = products.filter((p) => p.isSale)
-  if (category) products = products.filter((p) => p.category === category)
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+    fetch(`${apiUrl}/api/products/public?tenantId=${tenantId}`)
+      .then((res) => res.json())
+      .then((body) => {
+        if (body && body.data) {
+          const mapped = body.data.map((p: any) => ({
+            id: p.id,
+            slug: p.slug,
+            name: p.name,
+            brand: p.brandId || 'Дэлгүүр',
+            category: p.categoryId,
+            price: p.salePrice ? p.salePrice : p.price,
+            oldPrice: p.salePrice ? p.price : undefined,
+            isNew: p.featured || false,
+            isSale: p.salePrice ? true : false,
+            image: p.images?.[0] || '',
+          }))
+          setProducts(mapped)
+        }
+      })
+      .catch((err) => console.error('Failed to fetch products', err))
+      .finally(() => setLoading(false))
+  }, [tenantId])
 
-  const sliced = products.slice(0, limit)
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 mt-10 animate-pulse">
+        <div className="h-6 bg-gray-200 rounded w-1/4 mb-4" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="aspect-[4/3] bg-gray-200 rounded-2xl h-44" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  let filtered = products
+
+  if (isNew) filtered = filtered.filter((p) => p.isNew)
+  if (isSale) filtered = filtered.filter((p) => p.isSale)
+  if (category) filtered = filtered.filter((p) => p.category === category || p.slug === category)
+
+  const sliced = filtered.slice(0, limit)
   const pages = chunk(sliced, 6)
+
+  if (sliced.length === 0) {
+    return null
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 mt-10">

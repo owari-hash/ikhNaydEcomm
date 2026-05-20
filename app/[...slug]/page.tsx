@@ -1,13 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import {
-  CATEGORY_ICONS,
-  CATEGORY_LABELS,
-  type CatalogCategoryKey,
-  formatPrice,
-  getProductsByCategory,
-} from '../lib/mockCatalog';
+import { headers } from 'next/headers';
+import { fetchTenantConfig } from '../lib/tenantConfig';
+import { formatPrice } from '../lib/mockCatalog';
 import CategoryListingClient from './listingClient';
+import React from 'react';
 
 const CATEGORY_BANNER_IMAGES: Record<string, string> = {
   laptop:                 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1400&h=400&fit=crop',
@@ -17,15 +14,6 @@ const CATEGORY_BANNER_IMAGES: Record<string, string> = {
   'audio-equipment':      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1400&h=400&fit=crop',
   home:                   'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1400&h=400&fit=crop',
   accessories:            'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1400&h=400&fit=crop',
-  'fresh-fruits':         'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1400&h=400&fit=crop',
-  'meat-poultry':         'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=1400&h=400&fit=crop',
-  'dairy-eggs':           'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=1400&h=400&fit=crop',
-  seafood:                'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=1400&h=400&fit=crop',
-  vegetables:             'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1400&h=400&fit=crop',
-  bakery:                 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1400&h=400&fit=crop',
-  beverages:              'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=1400&h=400&fit=crop',
-  snacks:                 'https://images.unsplash.com/photo-1555243896-c709bfa0b564?w=1400&h=400&fit=crop',
-  grocery:                'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1400&h=400&fit=crop',
 };
 
 const DEFAULT_BANNER = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&h=400&fit=crop';
@@ -36,20 +24,80 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const category = slug[slug.length - 1];
-  const label = CATEGORY_LABELS[category as CatalogCategoryKey] ?? 'Бараа';
+  const categoryKey = slug[slug.length - 1];
+
+  const headersList = await headers();
+  const host = headersList.get('x-tenant-host') ?? headersList.get('host') ?? 'localhost';
+  const tenantSlug = headersList.get('x-tenant-slug');
+  const config = await fetchTenantConfig(host, tenantSlug);
+
+  let label = 'Бараа';
+  if (config) {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+      const catRes = await fetch(`${apiUrl}/api/categories/public?tenantId=${config.tenantId}`, { cache: 'no-store' });
+      const catBody = await catRes.json();
+      const matchedCat = catBody?.data?.find((c: any) => c.slug === categoryKey);
+      if (matchedCat) label = matchedCat.name;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return { title: `${label} | Их Наяд` };
 }
 
 export default async function CatchAllShopPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
   const categoryKey = slug[slug.length - 1];
-  const key = categoryKey as CatalogCategoryKey;
-  
-  const label = CATEGORY_LABELS[key] ?? 'Бүтээгдэхүүний хайлтын үр дүн';
-  const icon = CATEGORY_ICONS[key] ?? '📦';
-  const products = CATEGORY_LABELS[key] ? getProductsByCategory(key) : [];
+
+  const headersList = await headers();
+  const host = headersList.get('x-tenant-host') ?? headersList.get('host') ?? 'localhost';
+  const tenantSlug = headersList.get('x-tenant-slug');
+  const config = await fetchTenantConfig(host, tenantSlug);
+
+  if (!config) {
+    return <div>Сайт олдсонгүй</div>;
+  }
+
+  let label = 'Бүтээгдэхүүний хайлтын үр дүн';
+  let matchedCategoryId = '';
+  let categories: any[] = [];
+  let rawProducts: any[] = [];
+
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+    const [catRes, prodRes] = await Promise.all([
+      fetch(`${apiUrl}/api/categories/public?tenantId=${config.tenantId}`, { cache: 'no-store' }),
+      fetch(`${apiUrl}/api/products/public?tenantId=${config.tenantId}`, { cache: 'no-store' })
+    ]);
+
+    if (catRes.ok) {
+      const catBody = await catRes.json();
+      categories = catBody?.data || [];
+      const matchedCat = categories.find((c: any) => c.slug === categoryKey);
+      if (matchedCat) {
+        label = matchedCat.name;
+        matchedCategoryId = matchedCat.id;
+      }
+    }
+
+    if (prodRes.ok) {
+      const prodBody = await prodRes.json();
+      rawProducts = prodBody?.data || [];
+    }
+  } catch (e) {
+    console.error('Failed to fetch dynamic server data:', e);
+  }
+
+  // Filter products by matched category ID or category slug matching
+  const filteredProducts = rawProducts.filter(
+    (p: any) => p.categoryId === matchedCategoryId || p.categoryId === categoryKey
+  );
+
   const bannerImage = CATEGORY_BANNER_IMAGES[categoryKey] || DEFAULT_BANNER;
+
+  const categoryNameMap = new Map(categories.map((c) => [c.slug, c.name]));
 
   return (
     <div className="py-8">
@@ -75,7 +123,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
       </div>
 
       <div className="max-w-7xl mx-auto px-4">
-        {/* Breadcrumbs like Их Наяд Плаза */}
+        {/* Breadcrumbs */}
         <nav aria-label="breadcrumbs" className="text-xs sm:text-sm text-gray-500 mb-6 flex items-center gap-1.5 uppercase font-bold tracking-wider">
           <Link href="/" className="hover:text-primary transition-colors">
             Нүүр
@@ -84,13 +132,13 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
             <React.Fragment key={i}>
               <span className="text-gray-300">/</span>
               <span className={i === slug.length - 1 ? "text-gray-900" : "text-gray-500"}>
-                {CATEGORY_LABELS[s as CatalogCategoryKey] || s}
+                {categoryNameMap.get(s) || s}
               </span>
             </React.Fragment>
           ))}
         </nav>
 
-        {products.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
             <div className="text-7xl mb-4 opacity-40">📦</div>
             <h2 className="text-xl font-bold text-gray-700 mb-2">Бараа байхгүй байна</h2>
@@ -101,16 +149,16 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
           </div>
         ) : (
           <CategoryListingClient
-            category={{ key, label, icon }}
-            products={products.map((p) => ({
+            category={{ key: categoryKey, label, icon: '📦' }}
+            products={filteredProducts.map((p: any) => ({
               id: p.id,
               slug: p.slug,
               name: p.name,
-              brand: p.brand,
-              price: formatPrice(p.price),
-              oldPrice: p.oldPrice ? formatPrice(p.oldPrice) : undefined,
-              badge: p.isNew ? 'Шинэ' : p.isSale ? 'Хямдрал' : null,
-              image: p.image,
+              brand: p.brandId || 'Дэлгүүр',
+              price: formatPrice(p.salePrice ? p.salePrice : p.price),
+              oldPrice: p.salePrice ? formatPrice(p.price) : undefined,
+              badge: p.featured ? 'Шинэ' : p.salePrice ? 'Хямдрал' : null,
+              image: p.images?.[0],
             }))}
           />
         )}
@@ -118,6 +166,3 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
     </div>
   );
 }
-
-// Add React import for Fragments
-import React from 'react';

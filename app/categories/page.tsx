@@ -1,20 +1,35 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+'use client'
 
-export const metadata: Metadata = { title: 'Ангилал | Их Наяд Плаза' };
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useTenant } from '../lib/TenantContext'
 
-const categories = [
-  { label: 'Зөөврийн компьютер', href: '/laptop' },
-  { label: 'Суурин компьютер', href: '/computer' },
-  { label: 'Ухаалаг төхөөрөмж', href: '/smartphone-and-tablet' },
-  { label: 'Консоль', href: '/console' },
-  { label: 'Аудио төхөөрөмж', href: '/audio-equipment' },
-  { label: 'Гэр ахуй', href: '/home' },
-  { label: 'Дагалдах хэрэгсэл', href: '/accessories' },
-  { label: 'Брэндүүд', href: '/brands' },
-];
+interface Category {
+  id: string
+  name: string
+  slug: string
+  parentId: string | null
+  status: string
+}
 
 export default function CategoriesPage() {
+  const { tenantId } = useTenant()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+    fetch(`${apiUrl}/api/categories/public?tenantId=${tenantId}`)
+      .then((res) => res.json())
+      .then((body) => {
+        if (body && body.data) {
+          setCategories(body.data.filter((c: Category) => c.status === 'active'))
+        }
+      })
+      .catch((err) => console.error('Failed to fetch categories', err))
+      .finally(() => setLoading(false))
+  }, [tenantId])
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-1">
@@ -27,22 +42,39 @@ export default function CategoriesPage() {
 
       <h1 className="text-2xl font-black text-gray-800 mb-6">Ангилал</h1>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <ul className="divide-y divide-gray-100">
-          {categories.map((c) => (
-            <li key={c.href}>
+      {loading ? (
+        <div className="space-y-3 animate-pulse">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-12 bg-white border border-gray-100 rounded-2xl" />
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <ul className="divide-y divide-gray-100">
+            {categories.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/${c.slug}`}
+                  className="flex items-center justify-between px-5 py-4 hover:bg-blue-50 hover:text-[#1565C0] transition-colors"
+                >
+                  <span className="font-medium text-sm">{c.name}</span>
+                  <span className="text-gray-300">›</span>
+                </Link>
+              </li>
+            ))}
+            <li>
               <Link
-                href={c.href}
+                href="/brands"
                 className="flex items-center justify-between px-5 py-4 hover:bg-blue-50 hover:text-[#1565C0] transition-colors"
               >
-                <span className="font-medium text-sm">{c.label}</span>
+                <span className="font-medium text-sm">Брэндүүд</span>
                 <span className="text-gray-300">›</span>
               </Link>
             </li>
-          ))}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
