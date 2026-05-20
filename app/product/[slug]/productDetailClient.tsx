@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toggleCompare, readCompare } from '../../lib/compareStore';
@@ -101,9 +102,9 @@ export default function ProductDetailClient({ product }: Props) {
               shadowIntensity="heavy"
               disabled={!images[imgIdx]?.isImage}
             >
-              <div className="h-64 sm:h-80 md:h-[400px] flex items-center justify-center">
+              <div className="relative h-64 sm:h-80 md:h-[400px] flex items-center justify-center">
                 {images[imgIdx]?.isImage ? (
-                  <img src={images[imgIdx].src} alt={images[imgIdx].alt} className="w-full h-full object-contain p-2" />
+                  <Image src={images[imgIdx].src} alt={images[imgIdx].alt} fill className="object-contain p-2" sizes="(max-width:768px) 100vw, 50vw" />
                 ) : (
                   <div className="text-7xl sm:text-8xl opacity-50 select-none">{product.icon}</div>
                 )}
@@ -168,9 +169,9 @@ export default function ProductDetailClient({ product }: Props) {
                 }`}
                 aria-label={img.label}
               >
-                <div className="h-full w-full flex items-center justify-center">
+                <div className="relative h-full w-full flex items-center justify-center">
                   {img.isImage ? (
-                    <img src={img.src} alt={img.alt} className="w-full h-full object-contain p-1" />
+                    <Image src={img.src} alt={img.alt} fill className="object-contain p-1" sizes="64px" />
                   ) : (
                     <div className="text-xl opacity-60">{product.icon}</div>
                   )}
@@ -210,8 +211,12 @@ export default function ProductDetailClient({ product }: Props) {
                   </button>
 
                   {images[imgIdx]?.isImage ? (
-                    <img src={images[imgIdx].src} alt={images[imgIdx].alt} className="max-w-full max-h-full object-contain"
-                      style={{ transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`, transition: 'transform 120ms ease-out' }} />
+                    <div
+                      className="relative w-full h-full"
+                      style={{ transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`, transition: 'transform 120ms ease-out' }}
+                    >
+                      <Image src={images[imgIdx].src} alt={images[imgIdx].alt} fill className="object-contain" sizes="95vw" />
+                    </div>
                   ) : (
                     <div className="text-[180px] opacity-50"
                       style={{ transform: `scale(${zoom.scale}) rotate(${zoom.rot}deg) scaleX(${zoom.flipX ? -1 : 1}) scaleY(${zoom.flipY ? -1 : 1})`, transition: 'transform 120ms ease-out' }}>

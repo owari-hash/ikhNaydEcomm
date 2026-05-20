@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import GroceryBentoMobile from '../components/GroceryBentoMobile'
 
@@ -22,11 +23,12 @@ function BentoCard({ tile, className, style }: { tile: Tile; className?: string;
       className={`group relative overflow-hidden rounded-2xl bg-[#161b22] border border-white/5 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-black/60 ${className ?? ''}`}
       style={style}
     >
-      <img
+      <Image
         src={tile.image}
         alt={tile.label}
-        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-500"
-        loading="lazy"
+        fill
+        className="object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-500"
+        sizes="(max-width:768px) 100vw, 33vw"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent" />
       <div className="relative h-full p-4 flex flex-col justify-end">

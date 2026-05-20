@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import Carousel from '../components/Carousel'
 import { MOCK_PRODUCTS } from '../lib/mockCatalog'
@@ -77,7 +78,7 @@ export default function HeroBanner({ bigSlides = DEFAULT_BIG, smallSlides = DEFA
                 href={s.href}
                 className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all relative"
               >
-                <img src={s.image} alt={s.subtitle} className="absolute inset-0 w-full h-full object-cover" />
+                <Image src={s.image} alt={s.subtitle} fill className="object-cover" sizes="(max-width:1024px) 100vw, 66vw" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
                 <div className="relative h-48 sm:h-56 md:h-72 text-white p-4 sm:p-6 md:p-8 flex items-end justify-between">
                   <div>
@@ -99,7 +100,7 @@ export default function HeroBanner({ bigSlides = DEFAULT_BIG, smallSlides = DEFA
               href={s.href}
               className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all relative"
             >
-              <img src={s.image} alt={s.subtitle} className="absolute inset-0 w-full h-full object-cover" />
+              <Image src={s.image} alt={s.subtitle} fill className="object-cover" sizes="(max-width:1024px) 100vw, 66vw" />
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
               <div className="relative h-48 sm:h-56 lg:h-72 text-white p-5 flex flex-col justify-between">
                 <div>

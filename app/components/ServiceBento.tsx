@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -63,10 +64,12 @@ function ServiceCard({ svc }: { svc: typeof SERVICES[number] }) {
       href={svc.href}
       className="relative overflow-hidden rounded-2xl aspect-[4/3] group block"
     >
-      <img
+      <Image
         src={svc.image}
         alt={svc.label}
-        className="absolute inset-0 w-full h-full object-cover group-active:scale-105 transition-transform duration-300"
+        fill
+        className="object-cover group-active:scale-105 transition-transform duration-300"
+        sizes="(max-width:768px) 50vw, 25vw"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/5" />
       <div className="absolute inset-0 flex flex-col justify-between p-3">
@@ -124,14 +127,16 @@ export default function ServiceBento() {
               )}
               onMouseEnter={() => { setActiveRow(row); setActiveCol(col); }}
             >
-              <img
+              <Image
                 src={svc.image}
                 alt={svc.label}
+                fill
                 className={cn(
-                  'absolute inset-0 object-cover w-full h-full transition-all duration-700',
+                  'object-cover transition-all duration-700',
                   isActive ? 'scale-105' : 'scale-100 grayscale-[0.4]',
                   'group-hover:scale-110 group-hover:grayscale-0'
                 )}
+                sizes="(max-width:768px) 50vw, 25vw"
               />
               <div className={cn(
                 'absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 transition-opacity duration-500',

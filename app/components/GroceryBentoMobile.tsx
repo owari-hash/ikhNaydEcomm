@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import Carousel from './Carousel';
 
@@ -18,11 +19,12 @@ function Card({ tile, className, style }: { tile: Tile; className?: string; styl
       className={`group relative overflow-hidden rounded-xl bg-[#161b22] border border-white/5 block ${className ?? ''}`}
       style={style}
     >
-      <img
+      <Image
         src={tile.image}
         alt={tile.label}
-        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 transition-all duration-500"
-        loading="lazy"
+        fill
+        className="object-cover opacity-60 group-hover:opacity-75 transition-all duration-500"
+        sizes="(max-width:640px) 100vw, 50vw"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
       <div className="relative h-full p-3 flex flex-col justify-end">

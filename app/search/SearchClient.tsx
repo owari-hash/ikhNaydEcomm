@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -78,11 +79,12 @@ export default function SearchClient() {
               {/* Product Image */}
               <div className="h-32 bg-gray-50 relative overflow-hidden">
                 {product.image ? (
-                  <img 
-                    src={product.image} 
+                  <Image
+                    src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width:640px) 50vw, 25vw"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl">

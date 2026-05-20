@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { readCompare, writeCompare, type CompareItem } from '../lib/compareStore';
@@ -118,7 +119,7 @@ export default function ComparePageClient() {
                       {/* Image */}
                       <div className="relative w-full aspect-[4/3] bg-gray-50 rounded-xl overflow-hidden">
                         {p.image ? (
-                          <img src={p.image} alt={p.title} className="w-full h-full object-cover" loading="lazy" />
+                          <Image src={p.image} alt={p.title} fill className="object-cover" sizes="220px" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">{icon}</div>
                         )}

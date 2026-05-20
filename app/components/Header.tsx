@@ -1,11 +1,11 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getCartCount } from '../lib/cartStore';
+import { getCartCount, addToCart } from '../lib/cartStore';
 import { readAuth, logout, type User } from '../lib/authStore';
 import { MOCK_PRODUCTS, CATEGORY_ICONS, CATEGORY_LABELS, formatPrice } from '../lib/mockCatalog';
-import { addToCart } from '../lib/cartStore';
 import MegaMenu from './MegaMenu';
 import { useTenant } from '../lib/TenantContext';
 import { useTenantHref } from '../lib/useTenantHref';
@@ -199,9 +199,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="shrink-0 flex items-center gap-2">
             {branding.logo ? (
-              <img src={branding.logo} alt={branding.name || "Logo"} className="h-8 sm:h-10 w-auto object-contain max-w-[200px]" />
+              <Image src={branding.logo} alt={branding.name || "Logo"} width={200} height={40} className="h-8 sm:h-10 w-auto object-contain max-w-[200px]" style={{ width: 'auto' }} />
             ) : (
-              <img src="/logo.png" alt={branding.name || "Logo"} className="h-8 sm:h-10 w-auto object-contain" />
+              <Image src="/logo.png" alt={branding.name || "Logo"} width={200} height={40} className="h-8 sm:h-10 w-auto object-contain" style={{ width: 'auto' }} />
             )}
             {!branding.logo && branding.name && <span className="font-bold text-lg text-primary">{branding.name}</span>}
           </Link>
@@ -260,9 +260,9 @@ export default function Header() {
                           {searchSuggestions.map((product) => (
                             <div key={product.id} onClick={() => handleSuggestionClick(product.slug)}
                               className="border border-gray-100 rounded-lg p-2 hover:shadow-sm transition-all cursor-pointer group">
-                              <div className="aspect-square bg-gray-50 rounded-md flex items-center justify-center mb-2 overflow-hidden">
+                              <div className="relative aspect-square bg-gray-50 rounded-md flex items-center justify-center mb-2 overflow-hidden">
                                 {product.image
-                                  ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                                  ? <Image src={product.image} alt={product.name} fill className="object-cover" sizes="120px" />
                                   : <div className="text-2xl">{CATEGORY_ICONS[product.category]}</div>
                                 }
                               </div>
@@ -529,7 +529,7 @@ export default function Header() {
                         >
                           <div className="h-28 bg-gray-50 flex items-center justify-center overflow-hidden relative">
                             {product.image ? (
-                              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                              <Image src={product.image} alt={product.name} fill className="object-cover" sizes="144px" />
                             ) : (
                               <span className="text-4xl">{CATEGORY_ICONS[product.category]}</span>
                             )}

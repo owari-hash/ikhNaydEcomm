@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useTenant } from '../lib/TenantContext';
@@ -313,10 +314,12 @@ export default function MegaMenu() {
                           style={{ transitionDelay: isVisible ? '100ms' : '0ms' }}
                         >
                           <div className="h-32 overflow-hidden relative">
-                            <img
+                            <Image
                               src={cat.featured!.image}
                               alt={cat.featured!.title}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              sizes="224px"
                             />
                           </div>
                           <div className="p-3 bg-gradient-to-r from-red-50 via-white to-red-50/30">

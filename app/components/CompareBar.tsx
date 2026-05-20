@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { readCompare, writeCompare, type CompareItem } from '../lib/compareStore';
@@ -39,9 +40,9 @@ export default function CompareBar() {
             <div className="flex items-center gap-2 flex-1 min-w-0 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
               {items.map((item) => (
                 <div key={item.id} className="relative shrink-0 group/thumb">
-                  <div className="w-12 h-12 rounded-xl border border-gray-200 bg-gray-50 overflow-hidden flex items-center justify-center">
+                  <div className="relative w-12 h-12 rounded-xl border border-gray-200 bg-gray-50 overflow-hidden flex items-center justify-center">
                     {item.image ? (
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+                      <Image src={item.image} alt={item.title} fill className="object-cover" sizes="48px" />
                     ) : (
                       <span className="text-xl">📦</span>
                     )}

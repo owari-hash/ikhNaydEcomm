@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CATEGORY_ICONS, type CatalogCategoryKey, formatPrice } from '../lib/mockCatalog';
@@ -47,11 +48,12 @@ export default function ProductCard({ id, slug, name, brand, category, price, ol
       {/* Image */}
       <div className="relative aspect-[4/3] bg-gray-50 overflow-hidden">
         {image ? (
-          <img
+          <Image
             src={image}
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width:640px) 50vw, (max-width:1280px) 25vw, 20vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-4xl opacity-30">

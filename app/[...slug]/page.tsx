@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -105,10 +106,13 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
 
       {/* Top banner with image background - full width */}
       <div className="relative w-full h-48 sm:h-64 md:h-72 mb-6 overflow-hidden">
-        <img
+        <Image
           src={bannerImage}
           alt={label}
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />

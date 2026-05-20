@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const footerSections = [
@@ -48,9 +49,9 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-2">
             <div className="mb-4 flex items-center gap-3">
               {branding.logo ? (
-                <img src={branding.logo} alt={branding.name || "Logo"} className="h-10 w-auto object-contain max-w-[200px]" />
+                <Image src={branding.logo} alt={branding.name || "Logo"} width={200} height={40} className="h-10 w-auto object-contain max-w-[200px]" style={{ width: 'auto' }} />
               ) : (
-                <img src="/logo.png" alt={branding.name || "Logo"} className="h-10 w-auto object-contain" />
+                <Image src="/logo.png" alt={branding.name || "Logo"} width={200} height={40} className="h-10 w-auto object-contain" style={{ width: 'auto' }} />
               )}
               {!branding.logo && branding.name && <span className="font-bold text-lg text-white">{branding.name}</span>}
             </div>

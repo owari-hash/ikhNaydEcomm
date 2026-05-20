@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { addToCart } from '../lib/cartStore';
@@ -303,11 +304,12 @@ export default function CategoryListingClient({ category, products }: Props) {
             >
               <div className="relative h-36 md:h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
                 {p.image ? (
-                  <img 
-                    src={p.image} 
+                  <Image
+                    src={p.image}
                     alt={p.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width:640px) 50vw, (max-width:1280px) 33vw, 25vw"
                   />
                 ) : (
                   <div className="text-4xl md:text-6xl opacity-60">{category.icon}</div>
