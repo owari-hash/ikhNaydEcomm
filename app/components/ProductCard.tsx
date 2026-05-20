@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CATEGORY_ICONS, type CatalogCategoryKey, formatPrice } from '../lib/mockCatalog';
 import { toggleCompare, readCompare } from '../lib/compareStore';
+import { useTenantHref } from '../lib/useTenantHref';
 
 type Props = {
   id: string;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export default function ProductCard({ id, slug, name, brand, category, price, oldPrice, isNew, image }: Props) {
+  const tenantHref = useTenantHref();
   const discountPct = oldPrice ? Math.round((1 - price / oldPrice) * 100) : null;
   const [inCompare, setInCompare] = useState(false);
 
@@ -42,7 +44,7 @@ export default function ProductCard({ id, slug, name, brand, category, price, ol
 
   return (
     <Link
-      href={`/product/${slug}`}
+      href={tenantHref(`/product/${slug}`)}
       className="group flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden"
     >
       {/* Image */}

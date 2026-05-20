@@ -11,6 +11,7 @@ import {
   getCartTotal,
   type CartItem,
 } from '../lib/cartStore';
+import { useTenantHref } from '../lib/useTenantHref';
 
 const paymentMethods = [
   { id: 'qpay', name: 'QPay', icon: '💳', color: 'bg-blue-600' },
@@ -34,6 +35,7 @@ function formatPrice(price: number): string {
 }
 
 export default function CheckoutClient() {
+  const tenantHref = useTenantHref();
   const [items, setItems] = useState<CartItem[]>([]);
   const [selectedPayment, setSelectedPayment] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
@@ -163,7 +165,7 @@ export default function CheckoutClient() {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <Link
-                          href={`/product/${item.slug}`}
+                          href={tenantHref(`/product/${item.slug}`)}
                           className="font-bold text-gray-900 hover:text-primary transition-colors line-clamp-2"
                         >
                           {item.name}

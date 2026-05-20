@@ -6,8 +6,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { readCompare, writeCompare, type CompareItem } from '../lib/compareStore';
 import { MOCK_PRODUCTS, formatPrice, CATEGORY_ICONS, type CatalogCategoryKey } from '../lib/mockCatalog';
 import { addToCart } from '../lib/cartStore';
+import { useTenantHref } from '../lib/useTenantHref';
 
 export default function ComparePageClient() {
+  const tenantHref = useTenantHref();
   const [items, setItems] = useState<CompareItem[]>([]);
 
   useEffect(() => {
@@ -146,7 +148,7 @@ export default function ComparePageClient() {
                         </div>
                       )}
                       <Link
-                        href={p.slug ? `/product/${p.slug}` : '#'}
+                        href={p.slug ? tenantHref(`/product/${p.slug}`) : '#'}
                         className="text-sm font-black text-gray-900 leading-tight hover:text-primary transition-colors line-clamp-2"
                       >
                         {p.title}

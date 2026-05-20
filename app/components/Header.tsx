@@ -127,7 +127,7 @@ export default function Header() {
   const handleSuggestionClick = (slug: string) => {
     setShowSuggestions(false);
     setSearch('');
-    router.push(`/product/${slug}`);
+    router.push(tenantHref(`/product/${slug}`));
   };
 
   const handleAddToCart = (e: React.MouseEvent, product: typeof MOCK_PRODUCTS[0]) => {
@@ -478,7 +478,7 @@ export default function Header() {
                     {mobileSuggestions.map((product) => (
                       <button
                         key={product.id}
-                        onClick={() => { setShowMobileSearch(false); router.push(`/product/${product.slug}`); }}
+                        onClick={() => { setShowMobileSearch(false); router.push(tenantHref(`/product/${product.slug}`)); }}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-left active:bg-gray-50"
                       >
                         <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -523,7 +523,7 @@ export default function Header() {
                       {mobileSuggestions.map((product) => (
                         <Link
                           key={product.id}
-                          href={`/product/${product.slug}`}
+                          href={tenantHref(`/product/${product.slug}`)}
                           onClick={() => setShowMobileSearch(false)}
                           className="shrink-0 w-36 bg-white rounded-xl border border-gray-200 overflow-hidden active:opacity-75"
                         >

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { addToCart } from '../lib/cartStore';
+import { useTenantHref } from '../lib/useTenantHref';
 
 type ProductVM = {
   id: string;
@@ -138,6 +139,7 @@ function parsePrice(price: string): number {
 }
 
 export default function CategoryListingClient({ category, products }: Props) {
+  const tenantHref = useTenantHref();
   const [brandQuery, setBrandQuery] = useState('');
   const [selectedBrands, setSelectedBrands] = useState<Record<string, boolean>>({});
   const [sections, setSections] = useState<{ status: boolean; brand: boolean; price: boolean }>({
@@ -299,7 +301,7 @@ export default function CategoryListingClient({ category, products }: Props) {
           {filtered.map((p) => (
             <Link
               key={p.id}
-              href={`/product/${p.slug}`}
+              href={tenantHref(`/product/${p.slug}`)}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
             >
               <div className="relative h-36 md:h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
