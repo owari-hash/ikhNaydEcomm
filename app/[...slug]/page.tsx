@@ -111,7 +111,14 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
     (p: any) => categoryIds.has(p.categoryId) || p.categoryId === categoryKey
   );
 
-  const bannerImage = CATEGORY_BANNER_IMAGES[categoryKey] || DEFAULT_BANNER;
+  const matchedCat = categories.find((c: any) => c.slug === categoryKey);
+  let bannerImage = CATEGORY_BANNER_IMAGES[categoryKey] || DEFAULT_BANNER;
+  if (matchedCat && matchedCat.image) {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+    bannerImage = matchedCat.image.startsWith('http')
+      ? matchedCat.image
+      : `${apiUrl}${matchedCat.image}`;
+  }
 
   const categoryNameMap = new Map(categories.map((c) => [c.slug, c.name]));
 
@@ -128,6 +135,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
           priority
           className="object-cover"
           sizes="100vw"
+          unoptimized
         />
       </div>
 
