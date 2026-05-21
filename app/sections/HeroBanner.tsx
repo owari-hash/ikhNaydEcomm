@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Carousel from '../components/Carousel'
-import { MOCK_PRODUCTS } from '../lib/mockCatalog'
 
 interface Slide {
   href: string
@@ -18,24 +17,24 @@ interface HeroBannerProps {
 
 const DEFAULT_BIG: Slide[] = [
   {
-    href: `/product/${MOCK_PRODUCTS[0]?.slug ?? ''}`,
+    href: '/',
     title: 'Шинэ ирэлт',
-    subtitle: 'Acer Predator Helios Neo 16',
-    emoji: '💻',
+    subtitle: 'Шилдэг бараанууд',
+    emoji: '🛍️',
     image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&h=600&fit=crop',
   },
   {
-    href: '/computer',
-    title: 'Суурин компьютер',
-    subtitle: 'Desktop & Parts',
-    emoji: '🖥️',
+    href: '/',
+    title: 'Онцлох санал',
+    subtitle: 'Хямдрал & Урамшуулал',
+    emoji: '🎁',
     image: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=600&fit=crop',
   },
   {
-    href: `/product/${MOCK_PRODUCTS[2]?.slug ?? ''}`,
-    title: 'Gaming Graphics',
-    subtitle: 'ASUS TUF Gaming RTX 4090',
-    emoji: '🧩',
+    href: '/',
+    title: 'Шинэ бүтээгдэхүүн',
+    subtitle: 'Хамгийн шинэ загварууд',
+    emoji: '✨',
     image: 'https://images.unsplash.com/photo-1600861195091-690c92f1d2cc?w=1200&h=600&fit=crop',
   },
 ]
@@ -64,7 +63,9 @@ const DEFAULT_SMALL: Slide[] = [
   },
 ]
 
-export default function HeroBanner({ bigSlides = DEFAULT_BIG, smallSlides = DEFAULT_SMALL }: HeroBannerProps) {
+export default function HeroBanner({ bigSlides, smallSlides }: HeroBannerProps) {
+  const resolvedBig   = bigSlides   && bigSlides.length   > 0 ? bigSlides   : DEFAULT_BIG
+  const resolvedSmall = smallSlides && smallSlides.length > 0 ? smallSlides : DEFAULT_SMALL
   return (
     <div className="max-w-7xl mx-auto px-4 pt-4 sm:pt-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -72,7 +73,7 @@ export default function HeroBanner({ bigSlides = DEFAULT_BIG, smallSlides = DEFA
           <Carousel
             ariaLabel="Үндсэн баннер"
             autoplayMs={6500}
-            slides={bigSlides.map((s) => (
+            slides={resolvedBig.map((s) => (
               <Link
                 key={s.title}
                 href={s.href}
@@ -94,7 +95,7 @@ export default function HeroBanner({ bigSlides = DEFAULT_BIG, smallSlides = DEFA
         <Carousel
           ariaLabel="Онцлох баннер"
           autoplayMs={5500}
-          slides={smallSlides.map((s) => (
+          slides={resolvedSmall.map((s) => (
             <Link
               key={s.title}
               href={s.href}

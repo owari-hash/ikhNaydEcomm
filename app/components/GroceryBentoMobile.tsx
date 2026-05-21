@@ -3,16 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Carousel from './Carousel';
+import type { GroceryTile } from '../sections/GroceryBento';
 
-type Tile = {
-  id: string;
-  label: string;
-  sub: string;
-  href: string;
-  image: string;
-};
-
-function Card({ tile, className, style }: { tile: Tile; className?: string; style?: React.CSSProperties }) {
+function Card({ tile, className, style }: { tile: GroceryTile; className?: string; style?: React.CSSProperties }) {
   return (
     <Link
       href={tile.href}
@@ -36,30 +29,31 @@ function Card({ tile, className, style }: { tile: Tile; className?: string; styl
   );
 }
 
-type Props = { tiles: Tile[] };
+type Props = { tiles: GroceryTile[] };
 
 export default function GroceryBentoMobile({ tiles }: Props) {
-  const byId = Object.fromEntries(tiles.map(t => [t.id, t]));
+  // Guard: need at least 9 tiles
+  if (tiles.length < 9) return null;
 
-  // ── Hero slideshow (top): fresh → bakery → store ──────────────────────────
-  const heroSlides = ['fresh', 'bakery', 'store'].map(id => (
-    <Card key={id} tile={byId[id]} style={{ height: 180 }} className="w-full" />
+  // Hero slideshow (top): tiles 0, 1, 2
+  const heroSlides = [0, 1, 2].map((idx) => (
+    <Card key={idx} tile={tiles[idx]} style={{ height: 180 }} className="w-full" />
   ));
 
-  // ── Small grid slideshow (bottom): 2 slides × 3 tiles each ───────────────
-  // Slide layout: 2 side-by-side on top + 1 full-width below
+  // Small grid: 2 groups of 3
+  // Group 1: tiles 3, 4, 5  |  Group 2: tiles 6, 7, 8
   const smallGroups = [
-    ['dairy', 'veg', 'meat'],
-    ['seafood', 'drinks', 'snacks'],
+    [3, 4, 5],
+    [6, 7, 8],
   ];
 
-  const gridSlides = smallGroups.map((ids, i) => (
+  const gridSlides = smallGroups.map((idxs, i) => (
     <div key={i} className="flex flex-col gap-2">
       <div className="flex gap-2" style={{ height: 110 }}>
-        <Card tile={byId[ids[0]]} className="flex-1" />
-        <Card tile={byId[ids[1]]} className="flex-1" />
+        <Card tile={tiles[idxs[0]]} className="flex-1" />
+        <Card tile={tiles[idxs[1]]} className="flex-1" />
       </div>
-      <Card tile={byId[ids[2]]} style={{ height: 100 }} className="w-full" />
+      <Card tile={tiles[idxs[2]]} style={{ height: 100 }} className="w-full" />
     </div>
   ));
 
