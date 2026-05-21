@@ -113,11 +113,33 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
 
   const matchedCat = categories.find((c: any) => c.slug === categoryKey);
   let bannerImage = CATEGORY_BANNER_IMAGES[categoryKey] || DEFAULT_BANNER;
-  if (matchedCat && matchedCat.image) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
-    bannerImage = matchedCat.image.startsWith('http')
-      ? matchedCat.image
-      : `${apiUrl}${matchedCat.image}`;
+  if (matchedCat) {
+    let catBanner = matchedCat.banner;
+    // Fallback to parent banner if subcategory has no banner
+    if (!catBanner && matchedCat.parentId) {
+      const parentCat = categories.find((c: any) => c.id === matchedCat.parentId);
+      if (parentCat && parentCat.banner) {
+        catBanner = parentCat.banner;
+      }
+    }
+    // Fallback to own image/icon
+    if (!catBanner) {
+      catBanner = matchedCat.image;
+    }
+    // Fallback to parent image/icon
+    if (!catBanner && matchedCat.parentId) {
+      const parentCat = categories.find((c: any) => c.id === matchedCat.parentId);
+      if (parentCat && parentCat.image) {
+        catBanner = parentCat.image;
+      }
+    }
+
+    if (catBanner) {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+      bannerImage = catBanner.startsWith('http')
+        ? catBanner
+        : `${apiUrl}${catBanner}`;
+    }
   }
 
   const categoryNameMap = new Map(categories.map((c) => [c.slug, c.name]));
