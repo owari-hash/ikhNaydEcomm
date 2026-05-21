@@ -5,7 +5,6 @@ import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MobileBottomNav from "./components/MobileBottomNav";
-import CompareBar from "./components/CompareBar";
 import ScrollToTop from "./components/ScrollToTop";
 import NavigationProgress from "./components/NavigationProgress";
 import { TenantProvider } from "./lib/TenantContext";
@@ -130,7 +129,6 @@ export default async function RootLayout({
           <main className="flex-1 pb-24 md:pb-0">{children}</main>
           <Footer />
           <MobileBottomNav />
-          <CompareBar />
           <ScrollToTop />
         </TenantProvider>
       </body>

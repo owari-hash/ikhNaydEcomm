@@ -4,8 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { readCompare, writeCompare, type CompareItem } from '../lib/compareStore';
+import { useTenantHref } from '../lib/useTenantHref';
 
 export default function CompareBar() {
+  const tenantHref = useTenantHref();
   const [items, setItems] = useState<CompareItem[]>([]);
 
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function CompareBar() {
                 Цэвэрлэх
               </button>
               <Link
-                href="/compare"
+                href={tenantHref('/compare')}
                 className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

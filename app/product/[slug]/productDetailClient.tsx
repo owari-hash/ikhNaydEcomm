@@ -301,7 +301,7 @@ export default function ProductDetailClient({ product }: Props) {
                 {product.brand}
               </Link>
               <h1 className="text-lg sm:text-2xl font-black text-gray-900 leading-tight">{product.name}</h1>
-              <div className="mt-1 text-xs text-gray-400">{product.categoryLabel} · <span className="font-mono">#{product.id}</span></div>
+              <div className="mt-1 text-xs text-gray-400">{product.categoryLabel}</div>
             </div>
           </div>
 

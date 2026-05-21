@@ -4,14 +4,34 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { readCompare, writeCompare, type CompareItem } from '../lib/compareStore';
-import { MOCK_PRODUCTS, formatPrice, CATEGORY_ICONS, type CatalogCategoryKey } from '../lib/mockCatalog';
+import { formatPrice } from '../lib/mockCatalog';
 import { addToCart } from '../lib/cartStore';
 import { useTenantHref } from '../lib/useTenantHref';
 
-export default function ComparePageClient() {
+type FullProduct = {
+  id: string;
+  slug?: string;
+  name: string;
+  brandId?: string;
+  price: number;
+  salePrice?: number | null;
+  images?: string[];
+  specifications?: Record<string, string>;
+  description?: string;
+};
+
+type EnrichedItem = CompareItem & {
+  full?: FullProduct;
+  specs: Array<{ k: string; v: string }>;
+};
+
+export default function ComparePageClient({ tenantId }: { tenantId: string }) {
   const tenantHref = useTenantHref();
   const [items, setItems] = useState<CompareItem[]>([]);
+  const [fullProducts, setFullProducts] = useState<Record<string, FullProduct>>({});
+  const [loadingFull, setLoadingFull] = useState(false);
 
+  // Keep compare list in sync with localStorage
   useEffect(() => {
     const update = () => setItems(readCompare());
     update();
@@ -23,37 +43,56 @@ export default function ComparePageClient() {
     };
   }, []);
 
-  const products = useMemo(() =>
-    items.map((item) => ({
-      ...item,
-      full: MOCK_PRODUCTS.find((p) => p.id === item.id || p.slug === item.slug),
-    })),
-    [items],
+  // Fetch full product data from API when tenantId or items change
+  useEffect(() => {
+    if (!tenantId || items.length === 0) return;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+    setLoadingFull(true);
+    fetch(`${apiUrl}/api/products/public?tenantId=${tenantId}`)
+      .then((r) => r.json())
+      .then((body) => {
+        const map: Record<string, FullProduct> = {};
+        (body?.data ?? []).forEach((p: FullProduct) => { map[p.id] = p; });
+        setFullProducts(map);
+      })
+      .catch(() => {/* graceful degradation */})
+      .finally(() => setLoadingFull(false));
+  }, [tenantId, items.length]);
+
+  // Merge stored compare items with fetched full data
+  const enriched = useMemo<EnrichedItem[]>(() =>
+    items.map((item) => {
+      const full = fullProducts[item.id];
+      const specs: Array<{ k: string; v: string }> = full?.specifications
+        ? Object.entries(full.specifications).map(([k, v]) => ({ k, v: String(v) }))
+        : [];
+      return { ...item, full, specs };
+    }),
+    [items, fullProducts],
   );
 
-  // All unique spec keys across all found products
+  // All unique spec keys across compared products
   const specKeys = useMemo(() => {
     const keys: string[] = [];
     const seen = new Set<string>();
-    products.forEach((p) => {
-      p.full?.props.forEach((prop) => {
-        if (!seen.has(prop.k)) { seen.add(prop.k); keys.push(prop.k); }
+    enriched.forEach((p) => {
+      p.specs.forEach(({ k }) => {
+        if (!seen.has(k)) { seen.add(k); keys.push(k); }
       });
     });
     return keys;
-  }, [products]);
+  }, [enriched]);
 
   const remove = (id: string) => {
-    const next = readCompare().filter((x) => x.id !== id);
-    writeCompare(next);
+    writeCompare(readCompare().filter((x) => x.id !== id));
   };
 
-  // ── Empty state ────────────────────────────────────────────────────────────
+  // ── Empty state ──────────────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <nav className="text-sm text-gray-500 mb-6 flex items-center gap-1">
-          <Link href="/" className="hover:text-primary">Нүүр</Link>
+          <Link href={tenantHref('/')} className="hover:text-primary">Нүүр</Link>
           <span>/</span>
           <span className="text-gray-800 font-medium">Харьцуулах</span>
         </nav>
@@ -62,7 +101,7 @@ export default function ComparePageClient() {
           <h2 className="text-xl font-bold text-gray-700 mb-2">Харьцуулах бараа байхгүй байна</h2>
           <p className="text-gray-400 mb-6 text-sm">Барааны картнаас харьцуулах дүрсийг дарж нэмнэ үү</p>
           <Link
-            href="/"
+            href={tenantHref('/')}
             className="inline-block bg-primary hover:bg-primary-dark text-white font-bold px-8 py-3 rounded-xl transition-colors"
           >
             Бараа хайх
@@ -72,12 +111,12 @@ export default function ComparePageClient() {
     );
   }
 
-  // ── Main comparison view ───────────────────────────────────────────────────
+  // ── Main comparison table ────────────────────────────────────────────────────
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Breadcrumb + header */}
       <nav className="text-sm text-gray-500 mb-4 flex items-center gap-1">
-        <Link href="/" className="hover:text-primary">Нүүр</Link>
+        <Link href={tenantHref('/')} className="hover:text-primary">Нүүр</Link>
         <span>/</span>
         <span className="text-gray-800 font-medium">Харьцуулах</span>
       </nav>
@@ -95,42 +134,42 @@ export default function ComparePageClient() {
         </button>
       </div>
 
-      {/* Comparison table — horizontal scroll on mobile */}
       <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm bg-white">
-        <table className="w-full" style={{ minWidth: `${180 + products.length * 220}px` }}>
+        <table className="w-full" style={{ minWidth: `${180 + enriched.length * 220}px` }}>
           {/* Product header row */}
           <thead>
             <tr className="border-b border-gray-100">
-              {/* Sticky label column */}
               <th className="w-44 p-4 bg-gray-50 text-left text-xs font-black uppercase tracking-widest text-gray-400 align-bottom">
                 Шинж чанар
               </th>
 
-              {products.map((p) => {
-                const icon = p.full ? CATEGORY_ICONS[p.full.category as CatalogCategoryKey] : '📦';
-                const price = p.full ? p.full.price : p.price;
-                const oldPrice = p.full ? p.full.oldPrice : p.oldPrice;
-                const discountPct = (p.full?.oldPrice && p.full?.price)
-                  ? Math.round((1 - p.full.price / p.full.oldPrice) * 100)
+              {enriched.map((p) => {
+                // Prefer fetched data, fall back to stored data
+                const price = p.full?.salePrice ?? p.full?.price ?? p.price;
+                const oldPrice = p.full?.salePrice ? p.full.price : p.oldPrice;
+                const image = p.full?.images?.[0] ?? p.image;
+                const title = p.full?.name ?? p.title;
+                const brand = p.full?.brandId ?? p.brand;
+                const slug = p.full?.slug || p.slug || p.id;
+                const discountPct = (price != null && oldPrice != null && oldPrice > price)
+                  ? Math.round((1 - price / oldPrice) * 100)
                   : null;
 
                 return (
                   <th key={p.id} className="p-4 text-left align-top border-l border-gray-100 min-w-[220px]">
-                    {/* Product card inside table header */}
                     <div className="flex flex-col gap-3">
                       {/* Image */}
                       <div className="relative w-full aspect-[4/3] bg-gray-50 rounded-xl overflow-hidden">
-                        {p.image ? (
-                          <Image src={p.image} alt={p.title} fill className="object-cover" sizes="220px" unoptimized={true} />
+                        {image ? (
+                          <Image src={image} alt={title} fill className="object-cover" sizes="220px" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">{icon}</div>
+                          <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">📦</div>
                         )}
-                        {discountPct && (
+                        {discountPct != null && (
                           <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded leading-none">
                             -{discountPct}%
                           </span>
                         )}
-                        {/* Remove button */}
                         <button
                           type="button"
                           onClick={() => remove(p.id)}
@@ -141,17 +180,19 @@ export default function ComparePageClient() {
                         </button>
                       </div>
 
-                      {/* Name + brand */}
-                      {p.full?.brand && (
+                      {/* Brand */}
+                      {brand && (
                         <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                          {p.full.brand}
+                          {brand}
                         </div>
                       )}
+
+                      {/* Name */}
                       <Link
-                        href={p.slug ? tenantHref(`/product/${p.slug}`) : '#'}
+                        href={tenantHref(`/product/${slug}`)}
                         className="text-sm font-black text-gray-900 leading-tight hover:text-primary transition-colors line-clamp-2"
                       >
-                        {p.title}
+                        {title}
                       </Link>
 
                       {/* Price */}
@@ -164,19 +205,18 @@ export default function ComparePageClient() {
                         )}
                       </div>
 
-                      {/* Cart button */}
+                      {/* Cart button — use stored data, always works */}
                       <button
                         type="button"
                         onClick={() => {
-                          if (!p.full) return;
                           addToCart({
-                            id: p.full.id,
-                            name: p.full.name,
-                            slug: p.full.slug,
-                            price: p.full.price,
-                            oldPrice: p.full.oldPrice,
-                            icon: CATEGORY_ICONS[p.full.category as CatalogCategoryKey],
-                            brand: p.full.brand,
+                            id: p.id,
+                            name: title,
+                            slug,
+                            price: price ?? 0,
+                            oldPrice: oldPrice ?? undefined,
+                            icon: '📦',
+                            brand: brand || 'Дэлгүүр',
                           });
                         }}
                         className="w-full flex items-center justify-center gap-1.5 bg-primary hover:bg-primary-dark text-white font-bold py-2.5 rounded-xl text-sm transition-colors"
@@ -195,16 +235,24 @@ export default function ComparePageClient() {
 
           {/* Spec rows */}
           <tbody>
-            {specKeys.length === 0 && (
+            {loadingFull && (
               <tr>
-                <td colSpan={products.length + 1} className="p-6 text-center text-sm text-gray-400">
+                <td colSpan={enriched.length + 1} className="p-6 text-center text-sm text-gray-400 animate-pulse">
+                  Үзүүлэлт ачааллаж байна...
+                </td>
+              </tr>
+            )}
+            {!loadingFull && specKeys.length === 0 && (
+              <tr>
+                <td colSpan={enriched.length + 1} className="p-6 text-center text-sm text-gray-400">
                   Харьцуулах үзүүлэлт олдсонгүй
                 </td>
               </tr>
             )}
             {specKeys.map((key, rowIdx) => {
-              const vals = products.map((p) => p.full?.props.find((pr) => pr.k === key)?.v ?? null);
-              const allSame = vals.filter(Boolean).length > 1 && vals.every((v) => v === vals.find(Boolean));
+              const vals = enriched.map((p) => p.specs.find((s) => s.k === key)?.v ?? null);
+              const filled = vals.filter(Boolean);
+              const allSame = filled.length > 1 && vals.every((v) => v === filled[0]);
 
               return (
                 <tr key={key} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
@@ -215,7 +263,11 @@ export default function ComparePageClient() {
                     <td
                       key={ci}
                       className={`p-3 text-xs border-l border-t border-gray-100 ${
-                        val == null ? 'text-gray-300' : allSame ? 'text-gray-700' : 'text-gray-900 font-semibold'
+                        val == null
+                          ? 'text-gray-300'
+                          : allSame
+                          ? 'text-gray-700'
+                          : 'text-gray-900 font-semibold'
                       }`}
                     >
                       {val ?? '—'}

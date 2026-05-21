@@ -1,26 +1,25 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { fetchTenantConfig, type TenantLocation } from '../lib/tenantConfig';
 
-export const metadata: Metadata = { title: 'Салбар дэлгүүр | Их Наяд Плаза' };
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const host = headersList.get('x-tenant-host') ?? headersList.get('host') ?? 'localhost';
+  const tenantSlug = headersList.get('x-tenant-slug');
+  const config = await fetchTenantConfig(host, tenantSlug);
+  return { title: `Салбар дэлгүүр | ${config?.branding?.name ?? 'Дэлгүүр'}` };
+}
 
-const stores = [
-  {
-    name: 'Их Наяд Плаза — Их Наяд',
-    address: 'Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Их Наяд худалдааны төв, Зүүн өндөр 3 давхарт 309 тоот',
-    phone: '7709 1155',
-    hours: 'Өдөр бүр 10:00 - 20:00',
-    district: 'Хан-Уул дүүрэг',
-  },
-  {
-    name: 'Их Наяд Плаза — Зүүн өндөр',
-    address: 'Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Зүүн өндөр худалдааны төв',
-    phone: '7777-7754',
-    hours: 'Өдөр бүр 10:00 - 20:00',
-    district: 'Хан-Уул дүүрэг',
-  },
-];
+export default async function StoreLocationsPage() {
+  const headersList = await headers();
+  const host = headersList.get('x-tenant-host') ?? headersList.get('host') ?? 'localhost';
+  const tenantSlug = headersList.get('x-tenant-slug');
+  const config = await fetchTenantConfig(host, tenantSlug);
 
-export default function StoreLocationsPage() {
+  const locations: TenantLocation[] = config?.locations ?? [];
+  const primaryColor = config?.branding?.primaryColor ?? '#D32F2F';
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-1">
@@ -30,42 +29,74 @@ export default function StoreLocationsPage() {
       </nav>
       <h1 className="text-2xl font-black text-gray-800 mb-8">Салбар дэлгүүр</h1>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        {stores.map(store => (
-          <div key={store.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 text-white text-xl">
-                🏪
-              </div>
-              <div>
-                <h2 className="font-bold text-gray-800 mb-1">{store.name}</h2>
-                <p className="text-xs text-primary font-medium mb-3">{store.district}</p>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex items-start gap-2">
-                    <span className="text-base mt-0.5">📍</span>
-                    <span>{store.address}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">📞</span>
-                    <a href={`tel:${store.phone.replace(/-/g, '')}`} className="text-primary hover:underline font-medium">{store.phone}</a>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">🕐</span>
-                    <span>{store.hours}</span>
+      {locations.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div className="text-6xl mb-4 opacity-30">🏪</div>
+          <p className="text-gray-400 text-sm">Салбар дэлгүүрийн мэдээлэл удахгүй нэмэгдэнэ.</p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {locations.map((store, i) => (
+            <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-xl"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  🏪
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-bold text-gray-800 mb-1">{store.name}</h2>
+                  {store.district && (
+                    <p className="text-xs font-medium mb-3" style={{ color: primaryColor }}>
+                      {store.district}
+                    </p>
+                  )}
+                  <div className="space-y-2 text-sm text-gray-600">
+                    {store.address && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-base mt-0.5 shrink-0">📍</span>
+                        <span>{store.address}</span>
+                      </div>
+                    )}
+                    {store.phone && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-base shrink-0">📞</span>
+                        <a
+                          href={`tel:${store.phone.replace(/[\s-]/g, '')}`}
+                          className="font-medium hover:underline"
+                          style={{ color: primaryColor }}
+                        >
+                          {store.phone}
+                        </a>
+                      </div>
+                    )}
+                    {store.hours && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-base shrink-0">🕐</span>
+                        <span>{store.hours}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Map placeholder */}
+      {/* Map placeholder — uses first location's address as label */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-br from-red-50 to-red-100 h-64 flex flex-col items-center justify-center gap-3">
           <span className="text-6xl">🗺️</span>
-          <p className="text-gray-500 font-medium">Улаанбаатар хот, Хан-Уул дүүрэг</p>
-          <p className="text-sm text-gray-400">Их Наяд худалдааны төв</p>
+          {locations[0] ? (
+            <>
+              <p className="text-gray-500 font-medium">{locations[0].district || locations[0].address}</p>
+              <p className="text-sm text-gray-400">{locations[0].name}</p>
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">Байршил оруулаагүй байна</p>
+          )}
         </div>
       </div>
     </div>

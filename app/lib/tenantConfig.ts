@@ -32,6 +32,14 @@ export interface TenantContact {
   address: string
 }
 
+export interface TenantLocation {
+  name: string
+  district: string
+  address: string
+  phone: string
+  hours: string
+}
+
 export interface TenantPromo {
   visible: boolean
   label: string
@@ -48,6 +56,7 @@ export interface TenantConfig {
   features: TenantFeatures
   contact?: TenantContact
   promo?: TenantPromo
+  locations?: TenantLocation[]
 }
 
 const DEFAULT_CONFIG: TenantConfig = {
