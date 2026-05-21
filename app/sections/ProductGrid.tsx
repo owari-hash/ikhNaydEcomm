@@ -43,7 +43,7 @@ export default function ProductGrid({
             id: p.id,
             slug: p.slug,
             name: p.name,
-            brand: p.brandId || 'Дэлгүүр',
+            brand: (p.brandId && p.brandId !== 'br1') ? p.brandId : 'Дэлгүүр',
             category: p.categoryId,
             price: p.salePrice ? p.salePrice : p.price,
             oldPrice: p.salePrice ? p.price : undefined,

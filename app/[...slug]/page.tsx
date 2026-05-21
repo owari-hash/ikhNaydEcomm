@@ -116,11 +116,11 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
   const categoryNameMap = new Map(categories.map((c) => [c.slug, c.name]));
 
   return (
-    <div className="py-8">
+    <div className="pb-8">
       <h1 className="sr-only">Бүтээгдэхүүний хайлтын үр дүн</h1>
 
       {/* Top banner with image background - full width */}
-      <div className="relative w-full h-48 sm:h-64 md:h-72 mb-6 overflow-hidden">
+      <div className="relative w-full h-64 sm:h-80 md:h-[380px] mb-6 overflow-hidden">
         <Image
           src={bannerImage}
           alt={label}
@@ -129,16 +129,6 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
           className="object-cover"
           sizes="100vw"
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
-        {/* Content */}
-        <div className="relative h-full flex items-center justify-center text-white">
-          <div className="text-center px-4">
-            <div className="text-xs font-black tracking-widest text-red-300 mb-2 uppercase">Ангилал</div>
-            <div className="text-2xl sm:text-4xl font-black uppercase tracking-tight">{label}</div>
-            <p className="text-sm text-gray-300 mt-2 font-medium">Шилдэг бүтээгдэхүүнийг танд зориулав</p>
-          </div>
-        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4">
@@ -173,7 +163,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
               id: p.id,
               slug: p.slug || p.id,
               name: p.name,
-              brand: p.brandId || 'Дэлгүүр',
+              brand: (p.brandId && p.brandId !== 'br1') ? p.brandId : 'Дэлгүүр',
               price: formatPrice(p.salePrice ? p.salePrice : p.price),
               oldPrice: p.salePrice ? formatPrice(p.price) : undefined,
               badge: p.featured ? 'Шинэ' : p.salePrice ? 'Хямдрал' : null,
