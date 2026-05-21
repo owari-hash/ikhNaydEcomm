@@ -166,7 +166,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="w-full px-4 md:px-8 max-w-none">
         {/* Breadcrumbs */}
         <nav aria-label="breadcrumbs" className="text-xs sm:text-sm text-gray-500 mb-6 flex items-center gap-1.5 uppercase font-bold tracking-wider">
           <Link href="/" className="hover:text-primary transition-colors">

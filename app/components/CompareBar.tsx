@@ -27,7 +27,7 @@ export default function CompareBar() {
   };
 
   return (
-    <div className="fixed left-0 right-0 bottom-16 md:bottom-0 z-[60] animate-in slide-in-from-bottom-4 duration-200">
+    <div className="compare-bar-container fixed left-0 right-0 bottom-16 md:bottom-0 z-[60] animate-in slide-in-from-bottom-4 duration-200">
       <div className="max-w-7xl mx-auto px-3 pb-3">
         <div className="bg-white border border-gray-200 shadow-2xl rounded-2xl">
           <div className="px-4 py-3 flex items-center gap-3">
