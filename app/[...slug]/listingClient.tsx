@@ -656,38 +656,39 @@ export default function CategoryListingClient({
               </div>
               <div className="p-2 md:p-3 pt-0">
                 {/* Comparison Checkbox */}
-                <div
-                  className="mt-2.5 flex items-center justify-between border-t border-gray-100 pt-2 pb-0.5"
+                <button
+                  type="button"
+                  className={`mt-2.5 w-full flex items-center gap-1.5 border-t border-gray-100 pt-2 pb-0.5 text-xs font-bold select-none transition-colors ${
+                    compareIds.has(p.id) ? 'text-primary' : 'text-gray-500 hover:text-primary'
+                  }`}
                   onClick={(e) => {
-                    e.stopPropagation();
                     e.preventDefault();
+                    e.stopPropagation();
+                    const price = parsePrice(p.price);
+                    const oldPrice = p.oldPrice ? parsePrice(p.oldPrice) : undefined;
+                    const next = toggleCompare({
+                      id: p.id,
+                      title: p.name,
+                      slug: p.slug,
+                      brand: p.brand,
+                      image: p.image,
+                      price,
+                      oldPrice,
+                    });
+                    setCompareIds(new Set(next.map((x) => x.id)));
                   }}
                 >
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-primary cursor-pointer select-none w-full">
-                    <input
-                      type="checkbox"
-                      checked={compareIds.has(p.id)}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        const price = parsePrice(p.price);
-                        const oldPrice = p.oldPrice ? parsePrice(p.oldPrice) : undefined;
-                        const next = toggleCompare({
-                          id: p.id,
-                          title: p.name,
-                          slug: p.slug,
-                          brand: p.brand,
-                          image: p.image,
-                          price,
-                          oldPrice,
-                        });
-                        // Immediately sync — don't wait for the compare:changed event
-                        setCompareIds(new Set(next.map((x) => x.id)));
-                      }}
-                      className="rounded border-gray-300 text-primary focus:ring-primary w-3.5 h-3.5 cursor-pointer"
-                    />
-                    <span>Харьцуулах</span>
-                  </label>
-                </div>
+                  <span className={`shrink-0 w-3.5 h-3.5 rounded border-2 flex items-center justify-center transition-colors ${
+                    compareIds.has(p.id) ? 'bg-primary border-primary' : 'border-gray-300 bg-white'
+                  }`}>
+                    {compareIds.has(p.id) && (
+                      <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </span>
+                  Харьцуулах
+                </button>
 
                 <button
                   type="button"
