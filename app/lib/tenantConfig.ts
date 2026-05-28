@@ -75,6 +75,7 @@ const DEFAULT_CONFIG: TenantConfig = {
       { type: 'CategoryList', props: {} },
       { type: 'ProductGrid', props: { title: 'Шинэ бараа', isNew: true, limit: 8 } },
       { type: 'ProductGrid', props: { title: 'Хямдралтай', isSale: true, limit: 8 } },
+      { type: 'ProductGrid', props: { title: 'Бүх бүтээгдэхүүн', limit: 12 } },
       { type: 'GroceryBento', props: {} },
       { type: 'BrandList', props: {} },
     ],
