@@ -116,6 +116,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     isSale: !!x.salePrice,
     image: x.images?.[0],
     category: (categorySlug || 'accessories') as any,
+    stock: x.stock ?? 0,
   }));
 
   return (
@@ -150,6 +151,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             price: formatPrice(p.salePrice ?? p.price),
             oldPrice: p.salePrice ? formatPrice(p.price) : undefined,
             props: specs,
+            stock: p.stock ?? 0,
           }}
         />
       </div>

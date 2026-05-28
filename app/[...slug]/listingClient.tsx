@@ -18,6 +18,7 @@ type ProductVM = {
   oldPrice?: string;
   badge: string | null;
   image?: string;
+  stock?: number;
 };
 
 type Props = {
@@ -616,7 +617,7 @@ export default function CategoryListingClient({
             <Link
               key={p.id}
               href={tenantHref(`/product/${p.slug}`)}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between"
+              className={`bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between ${p.stock === 0 ? 'opacity-90' : ''}`}
             >
               <div>
                 <div className="relative h-36 md:h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -625,7 +626,7 @@ export default function CategoryListingClient({
                       src={p.image}
                       alt={p.name}
                       fill
-                      className="object-cover"
+                      className={`object-cover ${p.stock === 0 ? 'grayscale opacity-60' : ''}`}
                       sizes="(max-width:640px) 50vw, (max-width:1280px) 33vw, 25vw"
                       unoptimized
                     />
@@ -634,18 +635,22 @@ export default function CategoryListingClient({
                       src={logoFallback}
                       alt={branding.name ?? 'Logo'}
                       fill
-                      className="object-contain p-6 opacity-20"
+                      className={`object-contain p-6 opacity-20 ${p.stock === 0 ? 'grayscale opacity-40' : ''}`}
                       sizes="(max-width:640px) 50vw, (max-width:1280px) 33vw, 25vw"
                       unoptimized
                     />
                   ) : (
-                    <div className="text-4xl md:text-6xl opacity-60">{category.icon}</div>
+                    <div className={`text-4xl md:text-6xl opacity-60 ${p.stock === 0 ? 'grayscale opacity-40' : ''}`}>{category.icon}</div>
                   )}
-                  {p.badge && (
+                  {p.stock === 0 ? (
+                    <div className="absolute top-1.5 md:top-2 left-1.5 md:left-2 text-xs md:text-xs font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg text-white bg-gray-800">
+                      Дууссан
+                    </div>
+                  ) : p.badge ? (
                     <div className={`absolute top-1.5 md:top-2 left-1.5 md:left-2 text-xs md:text-xs font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg text-white ${p.badge === 'Шинэ' ? 'bg-primary' : 'bg-red-500'}`}>
                       {p.badge}
                     </div>
-                  )}
+                  ) : null}
                   <button
                     type="button"
                     className="absolute top-1.5 md:top-2 right-1.5 md:right-2 text-gray-300 hover:text-red-400 text-lg md:text-xl"
@@ -714,9 +719,15 @@ export default function CategoryListingClient({
 
                 <button
                   type="button"
-                  className="mt-2 w-full bg-primary hover:bg-primary-dark text-white text-xs md:text-xs font-black py-1.5 md:py-2 rounded-lg md:rounded-xl transition-colors"
+                  disabled={p.stock === 0}
+                  className={`mt-2 w-full text-xs md:text-xs font-black py-1.5 md:py-2 rounded-lg md:rounded-xl transition-colors ${
+                    p.stock === 0
+                      ? 'bg-gray-300 hover:bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-primary hover:bg-primary-dark text-white'
+                  }`}
                   onClick={(e) => {
                     e.preventDefault();
+                    if (p.stock === 0) return;
                     const price = parsePrice(p.price);
                     const oldPrice = p.oldPrice ? parsePrice(p.oldPrice) : undefined;
                     addToCart({
@@ -733,7 +744,7 @@ export default function CategoryListingClient({
                     setTimeout(() => setShowToast(false), 3000);
                   }}
                 >
-                  Сагсанд нэмэх
+                  {p.stock === 0 ? 'Дууссан' : 'Сагсанд нэмэх'}
                 </button>
               </div>
             </Link>

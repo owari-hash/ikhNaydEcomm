@@ -17,6 +17,7 @@ type SearchProduct = {
   image?: string;
   isSale: boolean;
   isNew: boolean;
+  stock?: number;
 };
 
 export default function SearchClient() {
@@ -53,6 +54,7 @@ export default function SearchClient() {
               image,
               isSale: !!p.salePrice,
               isNew: !!p.featured,
+              stock: p.stock ?? 0,
             };
           })
         );
@@ -125,7 +127,7 @@ export default function SearchClient() {
                     src={product.image}
                     alt={product.name}
                     fill
-                    className="object-cover"
+                    className={`object-cover ${product.stock === 0 ? 'grayscale opacity-60' : ''}`}
                     sizes="(max-width:640px) 50vw, 25vw"
                     unoptimized
                   />
@@ -134,16 +136,19 @@ export default function SearchClient() {
                     📦
                   </div>
                 )}
-                {product.isSale && (
+                {product.stock === 0 ? (
+                  <span className="absolute top-2 left-2 bg-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    Дууссан
+                  </span>
+                ) : product.isSale ? (
                   <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                     Хямдрал
                   </span>
-                )}
-                {product.isNew && !product.isSale && (
+                ) : product.isNew ? (
                   <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                     Шинэ
                   </span>
-                )}
+                ) : null}
               </div>
               
               <div className="p-3">

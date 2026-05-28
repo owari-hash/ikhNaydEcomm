@@ -19,6 +19,7 @@ type Props = {
   isNew?: boolean;
   isSale?: boolean;
   image?: string;
+  stock?: number;
 };
 
 function isUrl(s: string) {
@@ -44,7 +45,7 @@ function resolveProductImageUrl(url: string | undefined) {
   return url.startsWith('/') ? `${apiUrl}${url}` : `${apiUrl}/upload/${url}`;
 }
 
-export default function ProductCard({ id, slug, name, brand, category, price, oldPrice, isNew, image }: Props) {
+export default function ProductCard({ id, slug, name, brand, category, price, oldPrice, isNew, image, stock }: Props) {
   const tenantHref = useTenantHref();
   const { branding } = useTenant();
   const discountPct = oldPrice ? Math.round((1 - price / oldPrice) * 100) : null;
@@ -83,7 +84,7 @@ export default function ProductCard({ id, slug, name, brand, category, price, ol
             src={resolvedImage}
             alt={name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className={`object-cover group-hover:scale-105 transition-transform duration-300 ${stock === 0 ? 'grayscale opacity-60' : ''}`}
             sizes="(max-width:640px) 50vw, (max-width:1280px) 25vw, 20vw"
             unoptimized={true}
           />
@@ -93,7 +94,7 @@ export default function ProductCard({ id, slug, name, brand, category, price, ol
               src={fallbackImage}
               alt={branding.name ?? 'Logo'}
               fill
-              className="object-contain opacity-25"
+              className={`object-contain opacity-25 ${stock === 0 ? 'grayscale opacity-40' : ''}`}
               sizes="(max-width:640px) 50vw, (max-width:1280px) 25vw, 20vw"
               unoptimized={true}
             />
@@ -104,9 +105,13 @@ export default function ProductCard({ id, slug, name, brand, category, price, ol
           </div>
         )}
 
-        {/* Discount / NEW badge */}
+        {/* Discount / NEW / Out of Stock badge */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {discountPct ? (
+          {stock === 0 ? (
+            <span className="bg-gray-800 text-white text-[10px] font-black px-1.5 py-0.5 rounded leading-none shadow uppercase tracking-wide">
+              Дууссан
+            </span>
+          ) : discountPct ? (
             <span className="bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded leading-none shadow">
               -{discountPct}%
             </span>

@@ -206,6 +206,7 @@ export default async function CatchAllShopPage({ params }: { params: Promise<{ s
               oldPrice: p.salePrice ? formatPrice(p.price) : undefined,
               badge: p.featured ? 'Шинэ' : p.salePrice ? 'Хямдрал' : null,
               image: p.images?.[0],
+              stock: p.stock ?? 0,
             }))}
             categories={categories}
             allProducts={rawProducts}

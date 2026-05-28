@@ -12,6 +12,7 @@ import {
   type CartItem,
 } from '../lib/cartStore';
 import { useTenantHref } from '../lib/useTenantHref';
+import { useTenant } from '../lib/TenantContext';
 
 const paymentMethods = [
   { id: 'qpay', name: 'QPay', icon: '💳', color: 'bg-blue-600' },
@@ -36,12 +37,15 @@ function formatPrice(price: number): string {
 
 export default function CheckoutClient() {
   const tenantHref = useTenantHref();
+  const { tenantId } = useTenant();
   const [items, setItems] = useState<CartItem[]>([]);
   const [selectedPayment, setSelectedPayment] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [successOrderNumber, setSuccessOrderNumber] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // Customer info
   const [customerInfo, setCustomerInfo] = useState({
@@ -87,16 +91,53 @@ export default function CheckoutClient() {
     setShowPaymentModal(true);
   };
 
-  const processPayment = () => {
+  const processPayment = async () => {
     setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
+    setErrorMessage('');
+    try {
+      const orderData = {
+        tenantId,
+        customerInfo: {
+          lastName: customerInfo.lastName,
+          firstName: customerInfo.firstName,
+          phone: customerInfo.phone,
+          email: customerInfo.email,
+          address: customerInfo.address,
+        },
+        items: items.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        paymentMethod: selectedPayment,
+      };
+
+      const res = await fetch('/api/orders/public', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const body = await res.json();
+
+      if (!res.ok) {
+        throw new Error(body.error ?? 'Захиалга хийхэд алдаа гарлаа.');
+      }
+
+      const createdOrder = body.data;
+      setSuccessOrderNumber(createdOrder.orderNumber);
       setShowPaymentModal(false);
       setShowSuccessModal(true);
       clearCart();
       setItems([]);
-    }, 2000);
+    } catch (err: any) {
+      setErrorMessage(err.message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const isFormValid =
@@ -434,6 +475,12 @@ export default function CheckoutClient() {
               </div>
             )}
 
+            {errorMessage && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-semibold text-center leading-normal">
+                {errorMessage}
+              </div>
+            )}
+
             <button
               onClick={processPayment}
               disabled={isProcessing || (selectedPayment === 'qpay' && !selectedBank)}
@@ -461,7 +508,7 @@ export default function CheckoutClient() {
             </p>
             <div className="bg-gray-50 rounded-xl p-4 mb-6">
               <p className="text-xs text-gray-500">Захиалгын дугаар</p>
-              <p className="font-bold text-gray-900">#{Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+              <p className="font-bold text-gray-900">#{successOrderNumber}</p>
             </div>
             <Link
               href="/"

@@ -18,6 +18,7 @@ type SearchProduct = {
   price: number;
   oldPrice?: number;
   image?: string;
+  stock?: number;
 };
 
 export default function Header() {
@@ -94,6 +95,7 @@ export default function Header() {
               price: p.salePrice || p.price,
               oldPrice: p.salePrice ? p.price : undefined,
               image,
+              stock: p.stock ?? 0,
             };
           })
         );
@@ -300,21 +302,33 @@ export default function Header() {
                       <>
                         <div className="grid grid-cols-3 gap-2">
                           {searchSuggestions.map((product) => (
-                            <div key={product.id} onClick={() => handleSuggestionClick(product.slug)}
-                              className="border border-gray-100 rounded-lg p-2 hover:shadow-sm transition-all cursor-pointer group">
+                            <div key={product.id} onClick={() => product.stock !== 0 && handleSuggestionClick(product.slug)}
+                              className={`border border-gray-100 rounded-lg p-2 transition-all group ${product.stock === 0 ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-sm cursor-pointer'}`}>
                               <div className="relative aspect-square bg-gray-50 rounded-md flex items-center justify-center mb-2 overflow-hidden">
                                 {product.image
-                                  ? <Image src={product.image} alt={product.name} fill className="object-cover" sizes="120px" unoptimized />
+                                  ? <Image src={product.image} alt={product.name} fill className={`object-cover ${product.stock === 0 ? 'grayscale opacity-60' : ''}`} sizes="120px" unoptimized />
                                   : <div className="text-2xl">📦</div>
                                 }
+                                {product.stock === 0 && (
+                                  <span className="absolute top-1 left-1 bg-gray-800 text-white text-[8px] font-black px-1 py-0.5 rounded leading-none shadow uppercase">
+                                    Дууссан
+                                  </span>
+                                )}
                               </div>
                               <p className="text-[9px] text-gray-500 uppercase font-bold mb-0.5">{product.brand}</p>
                               <h5 className="text-[11px] font-medium text-gray-800 line-clamp-2 mb-1.5 group-hover:text-primary transition-colors h-7">{product.name}</h5>
                               <span className="text-xs font-black text-gray-900">{formatPrice(product.price)}</span>
-                              <button onClick={(e) => handleAddToCart(e, product)}
-                                className="w-full mt-1 bg-primary hover:bg-primary-dark text-white text-[10px] font-bold py-1 rounded transition-colors">
-                                Сагсанд нэмэх
-                              </button>
+                              {product.stock === 0 ? (
+                                <button disabled
+                                  className="w-full mt-1 bg-gray-300 text-gray-500 text-[10px] font-bold py-1 rounded cursor-not-allowed">
+                                  Дууссан
+                                </button>
+                              ) : (
+                                <button onClick={(e) => handleAddToCart(e, product)}
+                                  className="w-full mt-1 bg-primary hover:bg-primary-dark text-white text-[10px] font-bold py-1 rounded transition-colors">
+                                  Сагсанд нэмэх
+                                </button>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -565,19 +579,24 @@ export default function Header() {
                       {mobileSuggestions.map((product) => (
                         <Link
                           key={product.id}
-                          href={tenantHref(`/product/${product.slug}`)}
-                          onClick={() => setShowMobileSearch(false)}
-                          className="shrink-0 w-36 bg-white rounded-xl border border-gray-200 overflow-hidden active:opacity-75"
+                          href={product.stock === 0 ? '#' : tenantHref(`/product/${product.slug}`)}
+                          onClick={(e) => { if (product.stock === 0) { e.preventDefault(); } else { setShowMobileSearch(false); } }}
+                          className={`shrink-0 w-36 bg-white rounded-xl border border-gray-200 overflow-hidden active:opacity-75 ${product.stock === 0 ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
                           <div className="h-28 bg-gray-50 flex items-center justify-center overflow-hidden relative">
                             {product.image ? (
-                              <Image src={product.image} alt={product.name} fill className="object-cover" sizes="144px" unoptimized />
+                              <Image src={product.image} alt={product.name} fill className={`object-cover ${product.stock === 0 ? 'grayscale opacity-60' : ''}`} sizes="144px" unoptimized />
                             ) : (
                               <span className="text-4xl">📦</span>
                             )}
                             <div className="absolute top-1.5 left-1.5 bg-white/90 rounded px-1 py-0.5">
                               <span className="text-[9px] font-black text-gray-700">{product.brand}</span>
                             </div>
+                            {product.stock === 0 && (
+                              <span className="absolute top-1.5 right-1.5 bg-gray-800 text-white text-[8px] font-black px-1 py-0.5 rounded leading-none shadow uppercase">
+                                Дууссан
+                              </span>
+                            )}
                           </div>
                           <div className="p-2">
                             <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 leading-tight mb-1" style={{ minHeight: '2rem' }}>
@@ -586,14 +605,18 @@ export default function Header() {
                             <p className="text-[10px] text-gray-400 mb-2">{product.brand}</p>
                             <div className="flex items-center justify-between">
                               <span className="text-sm font-black text-gray-900">{formatPrice(product.price)}</span>
-                              <button
-                                onClick={(e) => { e.preventDefault(); handleAddToCart(e, product); }}
-                                className="bg-primary hover:bg-primary-dark text-white w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors"
-                              >
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                              </button>
+                              {product.stock === 0 ? (
+                                <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">Дууссан</span>
+                              ) : (
+                                <button
+                                  onClick={(e) => { e.preventDefault(); handleAddToCart(e, product); }}
+                                  className="bg-primary hover:bg-primary-dark text-white w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                  </svg>
+                                </button>
+                              )}
                             </div>
                           </div>
                         </Link>

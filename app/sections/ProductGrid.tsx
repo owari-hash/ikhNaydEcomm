@@ -50,6 +50,7 @@ export default function ProductGrid({
             isNew: p.featured || false,
             isSale: p.salePrice ? true : false,
             image: p.images?.[0] || '',
+            stock: p.stock,
           }))
           setProducts(mapped)
         }
