@@ -18,7 +18,7 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+    const apiUrl = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000')
     fetch(`${apiUrl}/api/categories/public?tenantId=${tenantId}`)
       .then((res) => res.json())
       .then((body) => {

@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "**" },
     ],
   },
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    return [
+      {
+        source: '/upload/:path*',
+        destination: `${apiUrl}/upload/:path*`,
+      },
+      {
+        source: '/api/:path*',
+        destination: `${apiUrl}/api/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

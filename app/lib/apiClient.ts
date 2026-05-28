@@ -10,7 +10,7 @@ export class ApiError extends Error {
 }
 
 function getBaseUrl() {
-  return process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+  return typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000')
 }
 
 function getAccessToken(): string | null {

@@ -26,7 +26,7 @@ export default function SearchClient() {
   const [apiProducts, setApiProducts] = useState<SearchProduct[]>([]);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+    const apiUrl = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000');
     fetch(`${apiUrl}/api/products/public?tenantId=${tenantId}`)
       .then(r => r.json())
       .then(body => {

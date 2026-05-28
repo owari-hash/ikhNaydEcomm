@@ -73,7 +73,7 @@ export async function logout(): Promise<void> {
 // Call on app init to restore session from cookie (asks server to validate)
 export async function restoreSession(): Promise<void> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
+    const apiUrl = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000')
     const res = await fetch(`${apiUrl}/api/users/me`, { credentials: 'include' })
     if (res.ok) {
       const user = await res.json()
