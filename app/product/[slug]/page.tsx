@@ -152,6 +152,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             oldPrice: p.salePrice ? formatPrice(p.price) : undefined,
             props: specs,
             stock: p.stock ?? 0,
+            isPosLinked: p.isPosLinked,
           }}
         />
       </div>

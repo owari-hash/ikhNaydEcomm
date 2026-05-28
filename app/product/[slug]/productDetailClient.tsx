@@ -24,6 +24,7 @@ type Props = {
     oldPrice?: string;
     props: Array<{ k: string; v: string }>;
     stock?: number;
+    isPosLinked?: boolean;
   };
 };
 
@@ -391,6 +392,12 @@ export default function ProductDetailClient({ product }: Props) {
 
           {/* Price + Add to cart (desktop) */}
           <div className="mt-5 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+            {product.isPosLinked && (
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-[10px] font-bold text-emerald-600 mb-3 animate-pulse">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Дэлгүүрийн үлдэгдэлтэй синхрончлогдсон (Live)
+              </div>
+            )}
             <div className="flex items-end justify-between gap-3">
               <div>
                 <div className="text-xs text-gray-400 font-semibold mb-1">Үнэ · НӨАТ ороогүй</div>
